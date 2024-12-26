@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assestad/js/clock.js">
+
+</head>
+<body>
+<div th:fragment="userFragment1">
+    <nav class="navbar navbar-light navbar-expand-md fixed-top navbar-shrink py-3" id="mainNav">
+        <div class="container">
+            <!-- Brand Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <span th:text="${CName}">Raj Electricity</span>
+            </a>
+            <!-- Navbar Toggler -->
+            <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
+                <span class="visually-hidden">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/user/products/">Product</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Comparison</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contacts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/user/cart/">Add To Cart</a></li>
+                </ul>
+
+                <!-- User Greeting or Sign-Up Button -->
+                <ul class="navbar-nav">
+                    <!-- If user is logged in, display their username and a logout link -->
+                    <li th:if="${session['key']}" class="nav-item">
+                        <span class="nav-link">Hello, <strong th:text="${session['key']}"></strong></span>
+                    </li>
+                    <!-- Logout link -->
+                    <li th:if="${session['key']}" class="nav-item">
+                        <a class="nav-link" href="/logout/">Logout</a>
+                    </li>
+
+                    <!-- If user is not logged in, show the Sign Up button -->
+                    <li th:if="${session['key'] == null}" class="nav-item">
+                        <a class="btn btn-primary shadow" role="button" href="/signup/">Sign up</a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+</div>
+</body>
+<script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assestad/js/theme.js"></script>
+</html>

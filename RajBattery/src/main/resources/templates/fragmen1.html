@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assestad/js/clock.js">
+
+</head>
+<body>
+<div th:fragment="adminfragment1">
+  <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+    <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+      <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
+      <div class="sidebar-brand-text mx-3">
+       
+        <span th:if="${Cname != null && Cname.length() >= 8}" th:text="${Cname.substring(0,8)}"></span>
+        <br />
+        <span th:if="${Cname != null && Cname.length() > 8}" th:text="${Cname.substring(8)}"></span>
+
+
+        <span th:if="${Cname == null || Cname.length() < 8}" th:text="'Welcome'"></span>
+
+      </div>
+    </a>
+      <hr class="sidebar-divider my-0">
+      <ul class="navbar-nav text-light" id="accordionSidebar">
+        <li class="nav-item">
+          <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#" style="height: 20px;">
+              <div class="sidebar-brand-icon rotate-n-15"></div>
+              <div class="sidebar-brand-text mx-3"></div>
+            </a>
+              <hr class="sidebar-divider my-0">
+              <ul class="navbar-nav text-light" id="accordionSidebar-1">
+                <li class="nav-item"><a class="nav-link active" href="/admin/dashboard/"><i class="fas fa-home"></i><span>&nbsp;Home</span></a></li>
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                  <p class="mb-0">INTERFACE</p>
+                </div>
+                <li class="nav-item">
+                  <div><a class="btn btn-link nav-link" data-bs-toggle="collapse" aria-expanded="true" aria-controls="collapse-1" href="#collapse-1" role="button"><i class="fas fa-cog"></i>&nbsp;<span>Components</span></a>
+                    <div class="collapse show" id="collapse-1">
+                      <div class="bg-white border rounded py-2 collapse-inner">
+                        <h6 class="collapse-header">Our seervices:</h6><a class="collapse-item" href="/new/Product/">Upload New Product&nbsp;</a>
+                        <a class="collapse-item" href="/admin/inhouse/invoice/">Inhouse Invoice</a>
+                        <a class="collapse-item" disabled="disabled" href="/admin/black-inhouse/invoice/">Inhouse Invoice<br> without gst</a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <div><a class="btn btn-link nav-link" data-bs-toggle="collapse" aria-expanded="true" aria-controls="collapse-2" href="#collapse-2" role="button"><i class="fas fa-wrench"></i>&nbsp;<span>Utilities</span></a>
+                    <div class="collapse show" id="collapse-2">
+                      <div class="bg-white border rounded py-2 collapse-inner">
+                        <h6 class="collapse-header">CUSTOM UTILITIES:</h6>
+                        <a class="collapse-item" href="/admin/product/stock/">Update Product Stock</a>
+                        <a class="collapse-item"  href="/admin/product/black/stock/">Update Secondary <br>Product Stock</a>
+                        <a class="collapse-item" href="/admin/update/offer/">Set offer</a>
+                        <a class="collapse-item" href="/admin/create/category/">Create Product Category</a>
+                        <a class="collapse-item" href="/company/">Update Company Details</a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                  <p class="mb-0">Addons</p>
+                </div>
+                <li class="nav-item">
+                  <div><a class="btn btn-link nav-link" data-bs-toggle="collapse" aria-expanded="true" aria-controls="collapse-3" href="#collapse-3" role="button"><i class="fas fa-folder"></i>&nbsp;<span>Pages</span></a>
+                    <div class="collapse show" id="collapse-3">
+                      <div class="bg-white border rounded py-2 collapse-inner">
+                        <h6 class="collapse-header">LOGIN SCREENS:</h6><a class="collapse-item" href="/login/">Login</a><a class="collapse-item" href="/signup/">Register</a><a class="collapse-item" href="/admin/forgotpasswordpage/">Forgot Password</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="collapsePages" class="collapse" aria-labelledby="headingTwo" aria-controls="collapsePages" data-bs-parent="#accordionSidebar">
+                    <div class="bg-white border rounded py-2 collapse-inner">
+                      <h6 class="collapse-header">LOGIN SCREENS:</h6><a class="collapse-item" href="/admin/login/">Login</a><a class="collapse-item" href="#">Register</a><a class="collapse-item" href="/admin/forgotpasswordpage/">Forgot Password</a>
+<!--                      <h6 class="collapse-header">OTHER PAGES:</h6><a class="collapse-item" href="#">404 Page</a><a class="collapse-item" href="#">Blank Page</a>-->
+                    </div>
+                  </div>
+                </li>
+                <li class="nav-item"></li>
+                <li class="nav-item"><a class="nav-link" href="/Product/report/"><i class="fas fa-table"></i><span>&nbsp;Product Report</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/Product/stock/report/"><i class="fas fa-table"></i><span>Product Stock Report</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/onlineSell/report/"><i class="fas fa-table"></i><span>&nbsp;Online Sell Product Dashboard</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/inhouseInvoice/report/"><i class="fas fa-table"></i><span>&nbsp; Inhouse Sell Product Dashboard</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/Incomplete/report/"><i class="fas fa-table"></i><span>&nbsp; Incomplete Invoice Report</span></a></li> 
+                <li class="nav-item"><a class="nav-link" href="/admin/companyDetails/report/"><i class="fas fa-table"></i><span>&nbsp; Company Details</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/old-battery/report/"><i class="fas fa-table"></i><span>Old Battery Report</span></a></li>
+<!--                <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-table"></i><span>&nbsp; Student Result Record</span></a></li>-->
+                <hr class="sidebar-divider">
+              </ul>
+              <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle-1" type="button"></button></div>
+            </div>
+          </nav><a class="nav-link active" href="/logout/"><i class="fas fa-lock"></i><span>Logout</span></a>
+        </li>
+<!--        <li class="nav-item"><a class="nav-link" href="404.html"><i class="fas fa-exclamation-circle"></i><span>Page Not Found</span></a></li>-->
+      </ul>
+<!--      <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle"  type="button"></button></div>-->
+    </div>
+  </nav>
+</div>
+</body>
+<script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assestad/js/theme.js"></script>
+</html>

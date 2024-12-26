@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Table - Brand</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assestad/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/assestad/css/Ludens---Create-Edit-Form.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/assestad/js/clock.js"></script>
+</head>
+
+<body id="page-top">
+<script th:inline="javascript">
+       var msg=[[${msg}]]
+       var emsg=[[${emsg}]]
+       if(msg!=null)
+       {
+               swal("Good job!", msg, "success");
+        }
+        if(emsg!=null)
+        {
+               swal("Opps!", emsg, "info");
+
+        }
+</script>
+    <div id="wrapper">
+        <div th:replace="fragmen1.html ::adminfragment1"></div>
+
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div th:replace="fragment2.html ::adminfragfragment2"></div>
+
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Product Info</h3>
+                    <div class="card shadow"></div>
+                </div>
+                <form method="post" action="/admin/addnewproduct/" th:object="${Product}" enctype="multipart/form-data">
+
+                <div class="container">
+                    <div style="color: rgb(133,135,150);height: 600px;">
+                        <form class="shadow align-content-center form-topborder" style="text-align: left;background: #ffffff;padding: 20px;">
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-3" style="margin-top: 12px;"><label class="form-label fw-bold">Product Id*</label>
+                                    <select class="form-select" name="PId" th:attr="disabled=${data?.PId==null}">
+                                        <option th:value="${data?.PId}" th:text="${data?.PId}" value="12" selected="">---------</option>
+                                    </select></div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-3" style="margin-top: 12px;"><label class="form-label fw-bold">Select Product Chatagory*</label><select class="form-select" name="category" required>
+                                        <option th:each="category : ${categoryList}" th:value="${category.id}"
+                                                th:text="${category.cate}" value="0" selected="">Battery</option>
+
+                                    </select></div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-top: 12px;"><label class="form-label fw-bold">Product Name*</label><input class="form-control" type="text" th:value="${data?.PName}" name="PName" placeholder="Product Name" required></div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-top: 12px;"><label class="form-label fw-bold">Company Name*</label><input class="form-control" type="text" th:value="${data?.CName}" placeholder="Product Company Name" name="CName" required></div>
+<!--                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Descripción de anexos*</label><input class="form-control" type="text"></div>-->
+<!--                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Fecha documento*</label><input class="form-control" type="date"></div>-->
+<!--                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Fecha recibe*</label><input class="form-control" type="date"></div>-->
+<!--                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Dirección general*</label><input class="form-control" type="text" placeholder="-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;"></div>-->
+<!--                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Dirección general*</label><input class="form-control" type="time"></div>-->
+<!--                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Tema*</label><input class="form-control" type="text" placeholder="Tema"></div>-->
+<!--                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Asunto*</label><input class="form-control" type="text" placeholder="Asunto"></div>-->
+<!--                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Remitente*</label><select class="form-select">-->
+<!--                                        <optgroup label="">-->
+<!--                                            <option value="12" selected="">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+<!--                                            <option value="13">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+<!--                                            <option value="14">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+<!--                                        </optgroup>-->
+<!--                                    </select></div>-->
+<!--                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Checkbox</label>-->
+<!--                                    <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1">1</label></div>-->
+<!--                                    <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-4"><label class="form-check-label" for="formCheck-4">2</label></div>-->
+<!--                                </div>-->
+<!--                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Quantity*</label><input class="form-control" type="number" th:value="${data?.qty}" name="qty" placeholder="0"></div>-->
+                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Prize*</label><input class="form-control" type="number" th:value="${data?.prize}" name="prize" placeholder="0" required></div>
+                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;">
+                                    <label class="form-label fw-bold">Would you like to sell this product online</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="formCheck-2" name="Pmode" value="Yes">
+                                        <label class="form-check-label" for="formCheck-2">Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="formCheck-3" name="Pmode" value="No">
+                                        <label class="form-check-label" for="formCheck-3">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Product Image(front view)*</label><input class="form-control" name="file" type="file" accept="image/*" required oninput="img.src=window.URL.createObjectURL(this.files[0])"></div>
+<!--                                <div class="col-12 col-sm-12 col-md-12 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Product Image(top view)*</label><input class="form-control" name="extensionT" type="file"></div>-->
+<!--                                <div class="col-12 col-sm-12 col-md-12 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Product Image(side view)*</label><input class="form-control" name="extensionS" type="file"></div>-->
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Product Description*</label><textarea class="form-control" th:value="${data?.description}" name="description" required placeholder="Enter battery details, e.g., 5000mAh, 3.7V Li-ion Rechargeable Battery" ></textarea>
+                                    <hr class="my-4">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="mt-4 mt-lg-4 my-4">
+                                <!-- Save Button: Green Success -->
+                                <button class="btn btn-success col-xl-12 btn-guardar col-sm-12 col-12" type="submit">
+                                    <i class="fa fa-save mx-3"></i>Save
+                                </button>
+
+                                <!-- Clear Button: Gray -->
+                                <button class="btn btn-secondary col-xl-12 mt-2 btn-limpiar col-sm-12 col-12" type="clear">
+                                    <i class="fas fa-broom mx-3"></i>Clear
+                                </button>
+
+                                <!-- Cancel Button: Red Alert -->
+                                <a class="btn btn-danger col-xl-12 mt-2 btn-cancelar col-sm-12 col-12" href="/admin/dashboard/">
+                                    <i class="fas fa-arrow-left mx-3"></i>Cancel
+                                </a>
+                            </div>
+                            <div class="text-center my-auto copyright"><span>Copyright © Raj Electric 2024</span></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title"></h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>The content of your modal.</p>
+                            </div>
+                            <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button><button class="btn btn-primary" type="button">Save</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assestad/js/bs-init.js"></script>
+    <script src="/assestad/js/theme.js"></script>
+</body>
+
+</html>

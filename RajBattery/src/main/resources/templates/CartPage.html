@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Brand</title>
+    <link rel="stylesheet" href="/user_assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900">
+    <link rel="stylesheet" href="/user_assets/css/Card-Store.css">
+    <link rel="stylesheet" href="/user_assets/css/Company-Invoice.css">
+    <link rel="stylesheet" href="/user_assets/css/Ludens---Create-Edit-Form.css">
+    <link rel="stylesheet" href="/user_assets/css/Pretty-Login-Form-.css">
+    <link rel="stylesheet" href="/user_assets/css/select.css">
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script>
+    function updateProcureQty(selectElement) {
+        const prodId = selectElement.getAttribute("data-prodId"); // Get the product ID
+        const quantity = selectElement.value; // Get selected quantity
+
+        // Send the data to the server
+        fetch(`/user/update/procureQty/${prodId}/${quantity}`, {
+            method: 'PUT',
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update quantity');
+            }
+        })
+        .then(data => {
+            console.log("Quantity updated successfully!", data);
+        })
+        .catch(error => {
+            console.error("Error updating quantity:", error);
+        });
+    }
+</script>
+
+</head>
+
+<body>
+<div th:replace="userFragment.html ::userFragment1"></div>
+    <header class="pt-5">
+        <div class="container pt-4 pt-xl-5">
+            <div class="row pt-5">
+                <div class="col-md-8 text-center text-md-start mx-auto">
+                    <div class="text-center">
+                        <h1 class="display-4 fw-bold mb-5"><span class="underline">Raliable</span>&nbsp;Power Solutions for a Brighter Future.</h1>
+                        <p class="fs-5 text-muted mb-5">Metus quisque ultricies vehicula proin, magna nullam.</p>
+                        <form class="d-flex justify-content-center flex-wrap" method="post">
+                            <div class="shadow-lg mb-3"><input class="form-control" type="text" name="pName" placeholder="Product Name"></div>
+                            <div class="shadow-lg mb-3"><button class="btn btn-primary" type="submit">Search</button></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-10 mx-auto">
+                    <div class="text-center position-relative"><img class="img-fluid" src="/user_assets/img/illustrations/meeting.svg" style="width: 800px;"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section></section>
+    <section class="py-4 py-xl-5">
+        <div class="container">
+            <div class="bg-primary border rounded border-0 border-primary overflow-hidden"></div>
+        </div>
+    </section>
+    <section class="py-5">
+
+        <div class="container py-4 py-xl-5">
+            <div class="row mb-5">
+                <div class="col-md-8 col-xl-6 text-center mx-auto">
+                    <h2 class="display-6 fw-bold mb-4">Check out<br>our <span class="underline">amazing Products</span></h2>
+                    <p class="text-muted">Curae hendrerit donec commodo hendrerit egestas tempus, turpis facilisis nostra nunc. Vestibulum dui eget ultrices.</p>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <!-- Iterate over productData -->
+                <div class="col-md-4" th:each="product : ${productData}">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Product Image -->
+                            <h4 class="card-title" style="text-align: center;">
+                                <img th:src="@{'/assestad/img/ProductImage/' + ${product['ProdId']} + '.' + ${product['extension']}}"
+                                     style="width: 200px; height: 150px;" alt="Product Image">
+                            </h4>
+
+                            <!-- Product Name -->
+                            <h6 class="text-muted card-subtitle mb-2" th:text="${product['pName']}">Product Name</h6>
+
+                            <!-- Product Price -->
+                            <p class="card-text" th:text="'Price: $' + ${product['pPrize']}">
+                                Nullam id dolor id nibh ultricies vehicula ut id elit.
+                            </p>
+
+                            <!-- Quantity Selector -->
+                            <form>
+                                <div class="field">
+                                    <div><label class="form-label mb-0">Select Quantity</label></div>
+                                    <select class="form-select" id="selectProdQty">
+                                        <!-- Generate options based on product stock -->
+                                        <option th:each="i : ${#numbers.sequence(1, product['pStock'])}"
+                                                th:value="${i}" th:text="${i + ' Unit'}"></option>
+                                    </select>
+                                </div>
+                            </form>
+
+                            <!-- Remove Product Button -->
+                            <div class="d-lg-flex justify-content-lg-center">
+                                <a class="btn btn-primary"
+                                   th:href="@{/user/remove/product/{id}(id=${product['ProdId']})}"
+                                   style="border-radius: 20px;">&nbsp;Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr style="border: 2px solid black; margin-bottom: 20px;">
+            <div style="text-align: center;">
+                <a class="btn btn-success"
+                   href="/user/order/placed/"
+                   style="border-radius: 20px; background-color: green; border: none;">&nbsp;Placed Order</a>
+            </div>
+
+            </div>
+        </div>
+    </section>
+    <section class="py-4 py-xl-5 mb-5"></section>
+    <section class="py-4 py-xl-5">
+        <div class="container">
+            <div class="text-white bg-primary border rounded border-0 border-primary d-flex flex-column justify-content-between flex-lg-row p-4 p-md-5">
+                <div class="pb-2 pb-lg-1">
+                    <h2 class="fw-bold text-warning mb-2">Not sure which battery suits your equipment?</h2>
+                    <p class="mb-0">Feel free to contact</p>
+                </div>
+                <div class="my-2"><a class="btn btn-light fs-5 py-2 px-4" role="button" href="contacts.html">Contact us</a></div>
+            </div>
+        </div>
+    </section>
+    <footer></footer>
+    <script src="/user_assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/user_assets/js/bs-init.js"></script>
+    <script src="/user_assets/js/startup-modern.js"></script>
+</body>
+
+</html>

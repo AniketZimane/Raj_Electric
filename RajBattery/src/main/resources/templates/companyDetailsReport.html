@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Table - Brand</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assestad/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/assestad/css/Billing-Table-with-Add-Row--Fixed-Header-Feature.css">
+    <link rel="stylesheet" href="/assestad/css/Company-Invoice.css">
+    <link rel="stylesheet" href="/assestad/css/Ludens---Create-Edit-Form.css">
+    <link rel="stylesheet" href="/assestad/css/Pretty-Login-Form-.css">
+    <link rel="stylesheet" href="/assestad/css/select.css">
+    <script src="/assestad/js/clock.js"></script>
+    <script src="/assestad/js/filter.js"></script>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <div th:replace="fragmen1.html ::adminfragment1"></div>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div th:replace="fragment2.html ::adminfragfragment2"></div>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Product Info</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <div>
+                                <p class="text-primary m-0 fw-bold" style="width: 300px;">Company Details</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 text-nowrap">
+
+                                <div class="col-md-6">
+                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" id="tSearch" oninput="filterTbl()" placeholder="Search"></label></div>
+                                </div>
+                            </div>
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table my-0" id="dataTable1">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Company Name</th>
+                                            <th class="text-center">Address</th>
+                                            <th class="text-center">Mobile Number</th>
+                                            <th class="text-center">gstNumber</th>
+                                            <th class="text-center">User Id</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="data : ${details}">
+                                            <td th:text="${data.cName}" class="text-center">#1234</td>
+                                            <td th:text="${data.cAddress}" class="text-center">Gurudam Sharma</td>
+                                            <td th:text="${data.cNumber}" class="text-center">B wing 405 rameshwar aprtment corlim goa</td>
+                                            <td th:text="${data.gstNumber}" class="text-center">9422195877</td>
+                                            <td th:text="${data.userId}" class="text-center">9422195877</td>
+                                            <td class="text-center"><a class="btn btn-info" th:href="@{/admin/edit/company/{id}/(id=${data.id})}" type="button"><i class="btn btnMaterial btn-flat primary semicircle"></i></a><a  th:href="@{/admin/delete/company/{id}/(id=${data.id})}" class="btn btn-danger" type="button" style="margin: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash-fill">
+                                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"></path>
+                                            </svg></a></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title"></h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>The content of your modal.</p>
+                            </div>
+                            <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button><button class="btn btn-primary" type="button">Save</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer"></footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assestad/js/bs-init.js"></script>
+    <script src="/assestad/js/Billing-Table-with-Add-Row--Fixed-Header-Feature-Billing-Table-with-Add-Row--Fixed-Header.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/assestad/js/theme.js"></script>
+</body>
+
+</html>

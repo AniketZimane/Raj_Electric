@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Additional Details Record - Brand</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Advent+Pro&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&amp;display=swap">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assestad/css/Black-Navbar.css">
+    <link rel="stylesheet" href="/assestad/css/FORM.css">
+    <link rel="stylesheet" href="/assestad/css/Multi-step-form.css">
+    <link rel="stylesheet" href="/assestad/css/Pretty-Login-Form-.css">
+    <script src="/assets/js/sweetalert.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/assestad/js/clock.js"></script>
+</head>
+
+<body id="page-top">
+<script th:inline="javascript">
+       var msg=[[${msg}]]
+       var emsg=[[${emsg}]]
+       if(msg!=null)
+       {
+               swal("Good job!", msg, "success");
+        }
+        if(emsg!=null)
+        {
+               swal("Opps!", emsg, "info");
+
+        }
+
+        function filterTbl(input) {
+		  var input, filter, table, tr, td, cell, i, j;
+		  input = document.getElementById("tSearch");
+		  filter = input.value.toUpperCase();
+		  table = document.getElementById("tbl");
+		  tr = table.getElementsByTagName("tr");
+		  for (i = 1; i < tr.length; i++) {
+		    // Hide the row initially.
+		    tr[i].style.display = "none";
+
+		    td = tr[i].getElementsByTagName("td");
+		    for (var j = 0; j < td.length; j++) {
+		      cell = tr[i].getElementsByTagName("td")[j];
+		      if (cell) {
+		        if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+		          tr[i].style.display = "";
+		          break;
+		        }
+		      }
+		    }
+		  }
+		}
+
+</script>
+    <div id="wrapper" >
+        <div th:replace="fragmen1.html ::adminfragment1"></div>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content" >
+                <div th:replace="fragment2.html ::adminfragfragment2"></div>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Product Report</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Student info</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 text-nowrap">
+                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
+                                                <option value="10" selected="">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>&nbsp;</label></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" id="tSearch" onkeyup="filterTbl()"></label></div>
+                                </div>
+                            </div>
+                            <div class="table-responsive table mt-2" id="dataTable1" role="grid" aria-describedby="dataTable_info">
+                                <table class="table my-0" id="tbl">
+                                    <thead>
+                                        <tr>
+                                            <th>Product Id</th>
+                                            <th>Product Name</th>
+                                            <th>Company Name</th>
+                                            <th>Product Image</th>
+
+                                            <th>Prize(per unit)</th>
+                                            <th>Description</th>
+                                            <th class="text-center filter-false sorter-false">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="prod : ${productList}">
+                                            <td th:text="${prod.PId}">S00000001</td>
+                                            <td th:text="${prod.PName}"></td>
+                                            <td th:text="${prod.CName}">2003/11/04</td>
+                                            <td>
+                                                <img th:src="@{'/assestad/img/ProductImage/' + ${prod.PId + '.' + prod.extension}}"
+                                                     alt="image not found"
+                                                     style="width: 100px; height: auto;">
+                                            </td>
+
+
+
+                                            <td th:text="${prod.prize}">92.20</td>
+                                            <td th:text="${prod.description}">92.20</td>
+                                            <td class="text-center align-middle" style="max-height: 60px;height: 60px;">
+<!--                                                <button class="btn btnMaterial btn-flat primary semicircle" id="openModel" data-bs-target="#additional_details_form" data-bs-toggle="modal">-->
+<!--                                                    <i class="fas fa-pencil-alt"></i>-->
+<!--                                                </button>-->
+                                                <a class="btn btnMaterial btn-flat primary semicircle" role="button" style="margin-left: 5px;"  th:href="@{/admin/edit/product/{PId}/(PId = ${prod.PId})}">
+                                                    <i class="fas fa-pencil-alt" style="color: #87CEEB;"></i></a>
+                                                <a class="btn btnMaterial btn-flat accent btnNoBorders checkboxHover" role="button" style="margin-left: 5px;"  th:href="@{/admin/delete/product/{PId}/(PId = ${prod.PId})}">
+                                                    <i class="fas fa-trash btnNoBorders" style="color: #DC3545;"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr></tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 align-self-center">
+                                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite" th:text="'Showing '+${curPage}+' to '+${totalPages}+' of '+${recordSize}">Showing 1 to 10 of 27</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                        <ul class="pagination">
+                                            <li class="page-item" th:classappend="${(curPage == 1)} ? 'disabled'">
+                                                <a class="page-link" aria-label="Previous" th:href="@{/admin/additional/details/{curPage}/(curPage=${curPage-1})}"><span aria-hidden="true">«</span>
+                                                </a>
+                                            </li>
+                                                <li class="page-item"
+                                                    th:classappend="${(pageNo == curPage) ? 'active' : ''}"
+                                                    th:each="pageNo : ${#numbers.sequence(0, totalPages - 1)}">
+                                                    <a class="page-link"
+                                                       th:href="@{/admin/additional/details/{curPage}/(curPage=${pageNo})}"
+                                                       th:text="${pageNo}">1</a>
+                                                </li>
+                                            <li class="page-item" th:classappend="${(curPage == totalPages)} ? 'disabled'">
+                                                <a class="page-link" aria-label="Next" th:href="@{/admin/additional/details/{curPage}/(curPage=${curPage+1})}"><span aria-hidden="true">»</span></a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Innovative THings 2023</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="additional_details_form">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Students Additional Details</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="height: 950px;">
+                        <p style="color: var(--bs-red);">This details must be added by administrator.&nbsp;</p>
+<!--                        <form method="post" action="/admin/student/update/aditional/deails/">-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="form-label" style="color: var(&#45;&#45;bs-black);">Student Id:-</label><input class="form-control" type="text" placeholder="Enter student id" id="studId" name="studId" oninput="sendData()"></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="form-label" style="color: var(&#45;&#45;bs-black);">Whether the candidate belong to schedule caste/schedule tribute/OBC:-&nbsp;</label>-->
+<!--                                        <div class="form-check"><input class="form-check-input" type="radio" name="scheduledCastOpn" id="formCheck-1" value="yes"><label class="form-check-label" for="formCheck-1">Yes</label></div>-->
+<!--                                        <div class="form-check"><input class="form-check-input" type="radio" name="scheduledCastOpn" id="formCheck-2" value="no"><label class="form-check-label" for="formCheck-2">No</label></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="form-label" style="color: var(&#45;&#45;bs-black);">Class in which students now studied:-</label><select class="form-select" name="currentClass" required="">-->
+<!--                                        <option name="currentClass" value="Eight" selected="">Eight</option>-->
+<!--                                        <option name="currentClass" value="Ningth">Ningth</option>-->
+<!--                                        <option value="Tenth">Tenth</option>-->
+<!--                                    </select></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="form-label" style="color: var(&#45;&#45;bs-black);">School/Board annual examination last taken with result</label><select class="form-select" name="examStu">-->
+<!--                                        <option name="examStu" value="Pass" selected="">Pass</option>-->
+<!--                                        <option name="examStu" value="Fail">Fail</option>-->
+<!--                                    </select></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="col-form-label" style="color: var(&#45;&#45;bs-black);">Subject studied:-</label></div>-->
+<!--                                </div>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-6">-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="subject" type="checkbox" id="formCheck-3" value="marathi"><label class="form-check-label" for="formCheck-3">Marathi</label></div>-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="subject" type="checkbox" id="formCheck-6" value="hindi"><label class="form-check-label" for="formCheck-6">Hindi</label></div>-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="subject" type="checkbox" id="formCheck-4" value="english"><label class="form-check-label" for="formCheck-4">English</label></div>-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="subject" type="checkbox" id="formCheck-9" value="technical"><label class="form-check-label" for="formCheck-9">Technical</label></div>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-md-6">-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="subject" type="checkbox" id="formCheck-5" value="mathematics"><label class="form-check-label" for="formCheck-5">Mathematics</label></div>-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="subject" type="checkbox" id="formCheck-7" value="science"><label class="form-check-label" for="formCheck-7">Science</label></div>-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="subject" type="checkbox" id="formCheck-8" value="social science"><label class="form-check-label" for="formCheck-8">Social science</label></div>-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="subject" type="checkbox" id="formCheck-10"><label class="form-check-label" for="formCheck-10">Other</label></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="form-label" style="color: var(&#45;&#45;bs-black);">Whether qualified for promotion to the higher class:-</label>-->
+<!--                                        <div class="form-check"><input class="form-check-input" type="radio" name="promotionStu" value="yes" id="formCheck-11"><label class="form-check-label" for="formCheck-11">Yes</label></div>-->
+<!--                                        <div class="form-check"><input class="form-check-input" type="radio" name="promotionStu" value="no" id="formCheck-12"><label class="form-check-label" for="formCheck-12">No</label></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="form-label" style="color: var(&#45;&#45;bs-black);">Enter school fees:</label>-->
+<!--                                        <div><input class="border rounded form-control" type="text" placeholder="Enter School fees" name="fees" style="height: 38px;width: 418px;padding: 10px;" required=""></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="form-label" style="color: var(&#45;&#45;bs-black);">Any fees concession</label>-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="feesConcession" type="radio" id="formCheck-13" value="yes"><label class="form-check-label" for="formCheck-13">Yes</label></div>-->
+<!--                                        <div class="form-check"><input class="form-check-input" name="feesConcession" type="radio" id="formCheck-14" value="no"><label class="form-check-label" for="formCheck-14">No</label></div>-->
+<!--                                        <div></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="form-label" style="color: var(&#45;&#45;bs-black);">General conduct:-</label>-->
+<!--                                        <div></div><select class="border rounded form-select" style="width: 418px;height: 38px;" name="generalConduct">-->
+<!--                                            <option value="Good" selected="">Good</option>-->
+<!--                                            <option value="bad">Bad</option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="container">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-12"><label class="form-label" style="color: var(&#45;&#45;bs-black);">Reason for leaving the school:-</label>-->
+<!--                                        <div></div><select class="border rounded form-select" style="width: 418px;height: 38px;" name="reason">-->
+<!--                                            <option value="Pursuing alternative education paths">Pursuing alternative education paths</option>-->
+<!--                                            <option value="Personal circumstances or obligations">Personal circumstances or obligations</option>-->
+<!--                                            <option value="Starting a business or entrepreneurial ventures">Starting a business or entrepreneurial ventures</option>-->
+<!--                                            <option value="Dissatisfaction with the education system">Dissatisfaction with the education system</option>-->
+<!--                                            <option value="Going for higher qualification" selected="">Going for higher qualification</option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="text-end" id="hideId"><button class="btn btn-primary" type="submit">Update</button><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button></div>-->
+<!--                        </form>-->
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assestad/js/Multi-step-form-script.js"></script>
+    <script src="/assestad/js/theme.js"></script>
+</body>
+
+</html>
