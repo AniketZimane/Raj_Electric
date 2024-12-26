@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https:www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Log in - Brand</title>
+    <link rel="stylesheet" href="/user_assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900">
+    <link rel="stylesheet" href="/user_assets/css/Card-Store.css">
+    <link rel="stylesheet" href="/user_assets/css/Company-Invoice.css">
+    <link rel="stylesheet" href="/user_assets/css/Ludens---Create-Edit-Form.css">
+    <link rel="stylesheet" href="/user_assets/css/Pretty-Login-Form-.css">
+    <link rel="stylesheet" href="/user_assets/css/select.css">
+    <script>
+    const offerId = 1; // Replace with the dynamic ID
+    document.getElementById('imgLogo').src = `/${offerId}/banner`;
+</script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md fixed-top navbar-shrink py-3" id="mainNav">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span>Raj Electricity</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div><img id="imgLogo" alt="Offer Banner" style="width:400px; height:200px;" /></div>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="integrations.html">Product</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pricing.html">Comparison</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
+                </ul><a class="btn btn-primary shadow" role="button" href="signup.html">Sign up</a>
+            </div>
+        </div>
+    </nav>
+    <section class="py-4 py-md-5 my-5">
+        <div class="container py-md-5">
+            <div class="row">
+                <div class="col-md-6 text-center"><img class="img-fluid w-100" src="/user_assets/img/illustrations/login.svg"></div>
+                <div class="col-md-5 col-xl-4 text-center text-md-start">
+                    <h2 class="display-6 fw-bold mb-5"><span class="underline pb-1"><strong>Login</strong><br></span></h2>
+                    <form method="post">
+                        <div class="mb-3"><input class="shadow form-control" type="email" name="email" placeholder="Email"></div>
+                        <div class="mb-3"><input class="shadow form-control" type="password" name="password" placeholder="Password"></div>
+                        <div class="mb-5"><button class="btn btn-primary shadow" type="submit">Log in</button></div>
+                        <p class="text-muted"><a href="forgotten-password.html" data-bs-target="#modal-1" data-bs-toggle="modal">Forgot your password?</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Reset Password</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>The content of your modal.</p>
+                    <div class="col-md-5 col-xl-4 text-center text-md-start" style="width: 300px;">
+                        <h2 class="display-6 fw-bold mb-5"><span class="underline pb-1"></span></h2>
+                        <form method="post" style="width: 400px;">
+                            <div class="mb-3"><input class="shadow form-control" type="email" name="email" placeholder="Email">
+                                <div class="d-lg-flex justify-content-lg-center"><button class="btn btn-secondary shadow" type="button" style="margin-top: 11px;border-radius: 10px;--bs-success: #0ed793;--bs-success-rgb: 14,215,147;background: var(--bs-green);border-color: var(--bs-btn-hover-border-color);color: var(--bs-btn-color);text-align: center;">Send Otp</button><button class="btn btn-success shadow" type="button" style="margin-top: 11px;border-radius: 10px;--bs-success: #0ed793;--bs-success-rgb: 14,215,147;background: var(--bs-green);border-color: var(--bs-btn-hover-border-color);color: var(--bs-btn-active-border-color);text-align: center;margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-counterclockwise" style="color: var(--bs-black);">
+                                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>
+                                            <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"></path>
+                                        </svg></button></div>
+                            </div>
+                            <div class="mb-3"><input class="shadow form-control" type="email" name="email" placeholder="Enter Otp"></div>
+                            <div class="d-lg-flex justify-content-lg-center" style="padding-bottom: 10px;"><button class="btn btn-secondary shadow" type="button" style="margin-top: 11px;border-radius: 10px;--bs-success: #0ed793;--bs-success-rgb: 14,215,147;background: var(--bs-green);border-color: var(--bs-btn-hover-border-color);color: var(--bs-black);text-align: center;">Send Otp</button></div>
+                            <div class="mb-3"><input class="shadow form-control" type="password" name="password" placeholder="Password"></div>
+                            <div class="mb-3"><input class="shadow form-control" type="password" name="rePassword" placeholder="Re Enter Password"></div>
+                            <div class="mb-5"><button class="btn btn-primary shadow" type="submit" style="border-radius: 10px;">Update</button></div>
+                            <p class="text-muted"><a href="forgotten-password.html" data-bs-target="#modal-1" data-bs-toggle="modal">Did You Remember Password?</a></p>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button></div>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+    <script src="/user_assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/user_assets/js/bs-init.js"></script>
+    <script src="/user_assets/js/startup-modern.js"></script>
+</body>
+
+</html>
