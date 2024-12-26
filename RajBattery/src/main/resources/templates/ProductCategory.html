@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Table - Brand</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assestad/css/Billing-Table-with-Add-Row--Fixed-Header-Feature.css">
+    <link rel="stylesheet" href="/assestad/css/Company-Invoice.css">
+    <link rel="stylesheet" href="/assestad/css/Ludens---Create-Edit-Form.css">
+    <link rel="stylesheet" href="/assestad/css/Pretty-Login-Form-.css">
+    <link rel="stylesheet" href="/assestad/css/select.css">
+    <script src="/assestad/js/clock.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+
+<body id="page-top">
+<script th:inline="javascript">
+       var msg=[[${msg}]]
+       var emsg=[[${emsg}]]
+       if(msg!=null)
+       {
+               swal("Good job!", msg, "success");
+        }
+        if(emsg!=null)
+        {
+               swal("Opps!", emsg, "info");
+
+        }
+</script>
+    <div id="wrapper">
+        <div th:replace="fragmen1.html ::adminfragment1"></div>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div th:replace="fragment2.html ::adminfragfragment2"></div>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Product Info</h3>
+                    <div class="card shadow"></div>
+                </div>
+                <div class="container">
+                    <div style="color: rgb(133,135,150);height: 600px;">
+                        <section>
+                            <div class="container">
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <div class="row login-form">
+                                            <div class="col-md-4 offset-md-4">
+                                                <h2 class="text-center form-heading">Create Product Category</h2>
+                                                <form class="custom-form" method="post" action="/admin/saved/category/" th:object="${Category}">
+                                                    <div class="form-group mb-3">
+
+                                                            <div class="field"><label class="form-label mb-0" for="float-input">Enter Product Category</label><input class="form-control" type="text" name="cate"  placeholder="eg.Battery"></div>
+
+                                                    </div><button class="btn btn-success d-block submit-button w-100" type="submit">Create Category</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assestad/js/bs-init.js"></script>
+    <script src="/assestad/js/Billing-Table-with-Add-Row--Fixed-Header-Feature-Billing-Table-with-Add-Row--Fixed-Header.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/assestad/js/theme.js"></script>
+</body>
+
+</html>

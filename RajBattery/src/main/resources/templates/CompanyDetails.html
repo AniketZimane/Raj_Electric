@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Table - Brand</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assestad/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/assestad/css/Ludens---Create-Edit-Form.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/assestad/js/clock.js"></script>
+</head>
+
+<body id="page-top">
+<script th:inline="javascript">
+       var msg=[[${msg}]]
+       var emsg=[[${emsg}]]
+       if(msg!=null)
+       {
+               swal("Good job!", msg, "success");
+        }
+        if(emsg!=null)
+        {
+               swal("Opps!", emsg, "info");
+
+        }
+</script>
+    <div id="wrapper">
+        <div th:replace="fragmen1.html ::adminfragment1"></div>
+
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div th:replace="fragment2.html ::adminfragfragment2"></div>
+
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Company Info Info</h3>
+                    <div class="card shadow"></div>
+                </div>
+                <form method="post" action="/admin/save/company/details/" th:object="${CompanyDetails}" enctype="multipart/form-data">
+                <div class="container">
+                    <div style="color: rgb(133,135,150);height: 600px;">
+                        <form class="shadow align-content-center form-topborder" style="text-align: left;background: #ffffff;padding: 20px;">
+                            <div class="row">
+
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-top: 12px;"><label class="form-label fw-bold">Company Name*</label><input class="form-control" type="text" th:value="${data?.cName}" name="cName" placeholder="Company Name" required></div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-top: 12px;"><label class="form-label fw-bold">Company Address*</label><input class="form-control" type="text" th:value="${data?.cAddress}" placeholder=" Company Address" name="cAddress" required></div>
+                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">Company Mobile Number*</label><input class="form-control" type="text" th:value="${data?.cNumber}" name="cNumber" placeholder="Enter company Mobile Number" required></div>
+
+                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;">
+                                    <label class="form-label fw-bold">Do you have GNTN number?</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="formCheck-2" name="gstnYn" th:value="${data?.gstnYn}" value="Yes">
+                                        <label class="form-check-label" for="formCheck-2">Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="formCheck-3" name="gstnYn" value="No" th:value="${data?.gstnYn}">
+                                        <label class="form-check-label" for="formCheck-3">No</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-3 order-4" style="margin-top: 12px;"><label class="form-label fw-bold">GST Number</label><input class="form-control" type="text" th:value="${data?.gstNumber}" name="gstNumber" placeholder="Enter GST Number "></div>
+
+                                <div class="field">
+                                    <label class="form-label fw-bold" for="offer_banner">Select Offer Banner</label>
+                                    <input class="form-control" type="file" name="logo" id="offer_banner" accept="image/*" required>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="mt-4 mt-lg-4 my-4">
+                                <!-- Save Button: Green Success -->
+                                <button class="btn btn-success col-xl-12 btn-guardar col-sm-12 col-12" type="submit">
+                                    <i class="fa fa-save mx-3"></i>Save
+                                </button>
+
+                                <!-- Clear Button: Gray -->
+                                <button class="btn btn-secondary col-xl-12 mt-2 btn-limpiar col-sm-12 col-12" type="clear">
+                                    <i class="fas fa-broom mx-3"></i>Clear
+                                </button>
+
+                                <!-- Cancel Button: Red Alert -->
+                                <a class="btn btn-danger col-xl-12 mt-2 btn-cancelar col-sm-12 col-12" href="/admin/dashboard/">
+                                    <i class="fas fa-arrow-left mx-3"></i>Cancel
+                                </a>
+                            </div>
+                            <div class="text-center my-auto copyright"><span>Copyright © Insight Visioners</span></div>
+                        </form>
+                    </div>
+                </div>
+            </form>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    <script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assestad/js/bs-init.js"></script>
+    <script src="/assestad/js/theme.js"></script>
+</body>
+
+</html>

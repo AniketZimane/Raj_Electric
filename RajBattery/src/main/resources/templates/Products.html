@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Brand</title>
+    <link rel="stylesheet" href="/user_assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900">
+    <link rel="stylesheet" href="/user_assets/css/Card-Store.css">
+    <link rel="stylesheet" href="/user_assets/css/Company-Invoice.css">
+    <link rel="stylesheet" href="/user_assets/css/Ludens---Create-Edit-Form.css">
+    <link rel="stylesheet" href="/user_assets/css/Pretty-Login-Form-.css">
+    <link rel="stylesheet" href="/user_assets/css/select.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/css/splide.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/js/splide.min.js"></script>
+    <script src="/assestad/js/slideing.js"></script>
+</head>
+
+<body>
+<div th:replace="userFragment.html ::userFragment1"></div>
+    <header class="pt-5">
+        <div class="container pt-4 pt-xl-5">
+            <div class="row pt-5">
+                <div class="col-md-8 text-center text-md-start mx-auto">
+                    <div class="text-center">
+                        <h1 class="display-4 fw-bold mb-5"><span class="underline">Raliable</span>&nbsp;Power Solutions for a Brighter Future.</h1>
+                        <p class="fs-5 text-muted mb-5">Metus quisque ultricies vehicula proin, magna nullam.</p>
+                        <form class="d-flex justify-content-center flex-wrap" method="post">
+                            <div class="shadow-lg mb-3"><input class="form-control" type="text" name="prodName" id="prodName" onkeyup="filterProduct()" placeholder="Product Name"></div>
+                            <div class="shadow-lg mb-3"><button class="btn btn-primary" type="submit">Search</button></div>
+                        </form>
+                    </div>
+                </div>
+                <div th:if="${emsg}" class="alert alert-success">
+                    No product In your cart!
+                </div>
+                <div id="splide" class="splide">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide" th:each="data:${offersData}">
+                                <img class="img-fluid" th:src="@{/offers/{id}/banner(id=${data.id})}"
+                                     style="height:400px;width:800px;">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <section></section>
+    <section class="py-4 py-xl-5">
+        <div class="container">
+            <div class="bg-primary border rounded border-0 border-primary overflow-hidden"></div>
+        </div>
+    </section>
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h1 style="text-align: center;margin-top: 20px;font-weight: bold;font-size: 20px;">Filtter</h1>
+                    <div class="d-lg-flex justify-content-lg-center"><button class="btn btn-primary" type="button" style="text-align: center;border-radius: 20px;">Apply</button></div>
+                </div>
+                <div class="col-md-3">
+                    <form>
+                        <div class="field"><select class="form-select">
+                                <optgroup label="This is a group">
+                                    <option value="12" selected="">This is item 1</option>
+                                    <option value="13">This is item 2</option>
+                                    <option value="14">This is item 3</option>
+                                </optgroup>
+                            </select><label class="form-label mb-0">Select</label></div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <form>
+                        <div class="field"><select class="form-select">
+                                <optgroup label="This is a group">
+                                    <option value="12" selected="">This is item 1</option>
+                                    <option value="13">This is item 2</option>
+                                    <option value="14">This is item 3</option>
+                                </optgroup>
+                            </select><label class="form-label mb-0" >Select</label></div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <form>
+                        <div class="field"><select class="form-select">
+                                <optgroup label="This is a group">
+                                    <option value="12" selected="">This is item 1</option>
+                                    <option value="13">This is item 2</option>
+                                    <option value="14">This is item 3</option>
+                                </optgroup>
+                            </select><label class="form-label mb-0">Select</label></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container py-4 py-xl-5">
+            <div class="row mb-5">
+                <div class="col-md-8 col-xl-6 text-center mx-auto">
+                    <h2 class="display-6 fw-bold mb-4">Check out<br>our <span class="underline">amazing Products</span></h2>
+                    <p class="text-muted">Curae hendrerit donec commodo hendrerit egestas tempus, turpis facilisis nostra nunc. Vestibulum dui eget ultrices.</p>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="productDiv">
+            <div class="row">
+                <div class="col-md-4" th:each="data:${productList}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title" style="text-align: center;">
+                                <img style="width: 200px;height: 150px;" th:src="@{'/assestad/img/ProductImage/' + ${data.PId + '.' + data.extension}}"></h4>
+                            <h2 class="text-muted card-subtitle mb-2 bold" th:text="${data.PName}">Subtitle</h2>
+                            <p th:text="'Rs- '+${data.prize}"></p>
+                            <!-- Short description (first 100 characters) -->
+<!--                            <p id="shortDescription" th:text="${data.description != null ? #strings.truncate(data.description, 100) : ''}" style="display: inline;"></p>-->
+
+                            <!-- Read more link -->
+                            <a href="javascript:void(0);" id="readMore">Read more</a>
+
+                            <!-- Full description (hidden by default) -->
+                            <p id="fullDescription" th:text="${data.description}" style="display: none;"></p>
+
+                            <div>
+                                <a class="btn btn-primary" type="button" th:href="@{/user/buy/product/{id}/(id=${data.PId})}" style="border-radius: 20px;">Buy Now</a>
+                                <a class="card-link" href="#"></a>
+                                <a class="card-link" href="#">
+                                    <a class="btn btn-primary" type="button" th:href="@{/user/add/product/{id}/(id=${data.PId})}" style="border-radius: 20px;">Add to Cart</a>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-4 py-xl-5 mb-5"></section>
+    <section class="py-4 py-xl-5">
+        <div class="container">
+            <div class="text-white bg-primary border rounded border-0 border-primary d-flex flex-column justify-content-between flex-lg-row p-4 p-md-5">
+                <div class="pb-2 pb-lg-1">
+                    <h2 class="fw-bold text-warning mb-2">Not sure which battery suits your equipment?</h2>
+                    <p class="mb-0">Feel free to contact</p>
+                </div>
+                <div class="my-2"><a class="btn btn-light fs-5 py-2 px-4" role="button" href="contacts.html">Contact us</a></div>
+            </div>
+        </div>
+    </section>
+    <footer></footer>
+    <script src="/user_assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/user_assets/js/bs-init.js"></script>
+    <script src="/user_assets/js/startup-modern.js"></script>
+</body>
+
+</html>
