@@ -86,8 +86,5 @@ For questions or feedback, contact:
 
 ---
 
-### **Changes & Fixes:**  
-✅ Removed the MIT license badge.  
-✅ Added a disclaimer stating that the project is reserved for **Insight Visioners** and **Shri Ram Batteries**.  
-✅ Restricted contributions to authorized team members.  
+
 
