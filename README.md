@@ -1,4 +1,3 @@
-Got it! You should remove the license badge and update the README to reflect that the project rights are reserved for **Insight Visioners** and **Shri Ram Batteries**. Here's the revised version:  
 
 ---
 
