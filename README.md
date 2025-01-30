@@ -3,8 +3,6 @@
 
 # **Shri Ram Batteries Company Project**  
 
-![GitHub Stars](https://img.shields.io/github/stars/AniketZimane/Raj_Electric)  
-![GitHub Issues](https://img.shields.io/github/issues/AniketZimane/Raj_Electric)  
 
 🚨 **Note:** This project is exclusively developed for **Insight Visioners** and **Shri Ram Batteries**. All rights are reserved.  
 
