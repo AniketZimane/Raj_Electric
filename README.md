@@ -1,106 +1,94 @@
-Here’s a sample `README.md` file template for a GitHub project:
+Got it! You should remove the license badge and update the README to reflect that the project rights are reserved for **Insight Visioners** and **Shri Ram Batteries**. Here's the revised version:  
 
 ---
 
-# **Project Name**
+# **Shri Ram Batteries Company Project**  
 
-![GitHub License](https://img.shields.io/badge/license-MIT-green)
-![GitHub Stars](https://img.shields.io/github/stars/your-repo-name)
-![GitHub Issues](https://img.shields.io/github/issues/your-repo-name)
+![GitHub Stars](https://img.shields.io/github/stars/AniketZimane/Raj_Electric)  
+![GitHub Issues](https://img.shields.io/github/issues/AniketZimane/Raj_Electric)  
 
-## **Description**
-
-A brief description of the project:
-- What does the project do?
-- Why is it useful?
-- Who is it for?
+🚨 **Note:** This project is exclusively developed for **Insight Visioners** and **Shri Ram Batteries**. All rights are reserved.  
 
 ---
 
-## **Features**
-- 🌟 Feature 1
-- 🚀 Feature 2
-- 🔒 Feature 3
+## **Description**  
+
+This project helps manage daily sales at Shri Ram Batteries, maintains stock, and generates e-invoices based on sales transactions. Additionally, it tracks daily expenses and showcases products on an online platform.  
 
 ---
 
-## **Demo**
-
-Include screenshots or GIFs here.
-
-![Screenshot](link-to-screenshot.png)
-
----
-
-## **Technologies Used**
-- **Frontend**: React / HTML / CSS / JavaScript
-- **Backend**: Node.js / Spring Boot / Django
-- **Database**: MySQL / MongoDB
-- **Other**: Docker / Kafka / Redis
+## **Features**  
+- 🌟 Efficient Store Inventory Management  
+- 🚀 Stock Tracking  
+- 🔒 Daily Expense and Remaining Payment Tracking  
 
 ---
 
-## **Installation**
+## **Demo**  
 
-1. Clone the repository:
+Include screenshots or GIFs of your project here.  
+
+---
+
+## **Technologies Used**  
+- **Frontend**: Bootstrap, HTML, CSS, JavaScript  
+- **Backend**: Java, Spring Boot, jQuery, Thymeleaf  
+- **Database**: MySQL  
+- **Hosting/Deployment**: Railway  
+
+---
+
+## **Installation**  
+
+1. Clone the repository:  
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/AniketZimane/Raj_Electric.git
+   cd Raj_Electric
    ```
 
-2. Install dependencies:
+2. Run the server:  
    ```bash
-   npm install
+   // Start your Spring Boot application
+   mvn spring-boot:run
    ```
 
-3. Run the application:
+3. Open the application in a browser:  
    ```bash
-   npm start
+   Go to any browser and type localhost:8080
    ```
 
 ---
 
-## **API Documentation**
+API Documentation
+GET
+Description: This GET API is used for displaying pages.
+POST
+/fetch-details/
+Description: This API fetches the data of the logged-in user using their ID and returns the total value and details of the products in their cart.
 
-### **GET /api/v1/items**
-Retrieves a list of items.
+/save-item/
+Description: This API saves the order details in the database and generates an invoice if all the data provided is valid.
+---
 
-### **POST /api/v1/items**
-Creates a new item.
+## **How to Contribute**  
+
+🚨 **Contributions to this project are not open to the public.**  
+
+If you're part of **Insight Visioners** or **Shri Ram Batteries**, please contact the project maintainers for collaboration.  
 
 ---
 
-## **How to Contribute**
+## **Contact**  
 
-1. Fork this repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m 'Add some feature'
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a pull request.
+For questions or feedback, contact:  
+- **Name**: Aniket Zimane  
+- **GitHub**: [AniketZimane](https://github.com/AniketZimane/Raj_Electric)  
+- **Email**: ad.developer1604@gmail.com  
 
 ---
 
-## **License**
+### **Changes & Fixes:**  
+✅ Removed the MIT license badge.  
+✅ Added a disclaimer stating that the project is reserved for **Insight Visioners** and **Shri Ram Batteries**.  
+✅ Restricted contributions to authorized team members.  
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-## **Contact**
-
-For questions or feedback, contact:
-- **Name**: [Your Name](https://github.com/your-username)
-- **Email**: your.email@example.com
-
----
-
-Let me know if you'd like me to customize this further for your specific project!
