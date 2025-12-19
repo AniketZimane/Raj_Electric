@@ -65,29 +65,34 @@ public class UserController {
         companyInfo(model);
         return "ProductForm";
     }
-    @GetMapping("/")
-    public String getHomePage(Model model)
-    {
-        List<Product> productList=productRepo.findAll();
-        List<Offer> offersData = offerService.getValidOffers();
-        String companyName=null;
-        List<CompanyDetails> companyDetails=companyDetailsRepo.findAll();
-        if(companyDetails!=null)
-        {
-            for (CompanyDetails data:companyDetails) {
-                companyName=data.getcName();
-            }
-        }
-        else{
-            companyName="Welcome to innovative things";
-        }
-        model.addAttribute("offersData",offersData);
-        model.addAttribute("productList",productList);
-        model.addAttribute("CName",companyName);
-        return "home";
-    }
+//    @GetMapping("/")
+//    public String getHomePage(Model model)
+//    {
+//        List<Product> productList=productRepo.findAll();
+//        List<Offer> offersData = offerService.getValidOffers();
+//        String companyName=null;
+//        List<CompanyDetails> companyDetails=companyDetailsRepo.findAll();
+//        if(companyDetails!=null)
+//        {
+//            for (CompanyDetails data:companyDetails) {
+//                companyName=data.getcName();
+//            }
+//        }
+//        else{
+//            companyName="Welcome to innovative things";
+//        }
+//        model.addAttribute("offersData",offersData);
+//        model.addAttribute("productList",productList);
+//        model.addAttribute("CName",companyName);
+//        return "home";
+//    }
+@GetMapping("/")
+public String redirectToLogin() {
+    return "redirect:/login";
+}
 
-    @GetMapping("/user/products/")
+
+    @GetMapping("/user/products")
     public String getProductPage(Model model)
     {
         List<Product> productList = productRepo.findAll();
@@ -123,20 +128,20 @@ public class UserController {
         return "CustomerDetails";
     }
 
-    @GetMapping("/login/")
+    @GetMapping("/login")
     public String getLoginPage(Model model)
     {
-        return "Login";
+        return "login";
     }
 
-    @GetMapping("/logout/")
+    @GetMapping("/logout")
     public String getLogOutPage()
     {
         session.invalidate();
         return "redirect:/";
     }
 
-    @GetMapping("/signup/")
+    @GetMapping("/signup")
     public String getRegistrationPage()
     {
         session.invalidate();
@@ -292,7 +297,7 @@ public class UserController {
         return "Invoice"; // This will render the Invoice template
     }
 
-    @GetMapping("/loader/")
+    @GetMapping("/loader")
     public String getLoader(Model model)
     {
         return "loader";

@@ -25,10 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,7 +146,8 @@ public class AdminController {
             model.addAttribute("emsg", "An error occurred while processing the request.");
             e.printStackTrace();
         }
-
+        List<Category> categoryList=categoryRepo.findAll();
+        model.addAttribute("categoryList",categoryList);
         return redirectPage;
     }
 
@@ -174,12 +172,35 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/Product/report/{pageNo}")
+    public String getProductReport(@PathVariable("pageNo") int pageNo, Model model) {
+
+        int pageSize = 10; // You can change this
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("PId").descending());
+        Page<Product> page = productRepo.findAll(pageable);
+
+        model.addAttribute("curPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("productList", page.getContent());
+        model.addAttribute("recordSize", page.getTotalElements());
+
+        companyInfo(model);
+
+        return "ProductReport";
+    }
+
+
     @GetMapping("/Product/report/")
-    public String getProductReport(Model model)
-    {
+    public String productReportDefault() {
+        return "redirect:/Product/report/0";
+    }
 
+
+    @GetMapping("/admin/delete/product/{PId}/")
+    public String deleteProductRecord(Model model, @PathVariable Long PId) {
+        productRepo.deleteById(PId);
         int curPage = 1;
-
         Pageable pageable = PageRequest.of(curPage, maxSize, Sort.by("PId").descending());
         Page<Product> page = productRepo.findAll(pageable);
         int totalPages = page.getTotalPages();
@@ -190,24 +211,6 @@ public class AdminController {
         model.addAttribute("productList", ProductRequestList);
         model.addAttribute("productList", productL1);
         model.addAttribute("recordSize", productL1.size());
-        companyInfo(model);
-        return "ProductReport";
-    }
-
-    @GetMapping("/admin/delete/product/{PId}/")
-    public String deleteProductRecord(Model model, @PathVariable Long PId) {
-        productRepo.deleteById(PId);
-        int curPage = 1;
-        Pageable pageable = PageRequest.of(curPage, maxSize, Sort.by("PId").descending());
-        Page<Product> page = productRepo.findAll(pageable);
-        int totalPages = page.getTotalPages();
-        List<Product> productList = page.toList();
-        List<Product> productList1 = productRepo.findAll();
-        model.addAttribute("resultList", productList);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("curPage", curPage);
-        model.addAttribute("productList", productList);
-        model.addAttribute("recordSize", productList.size());
         model.addAttribute("msg", "Record Deleted");
         companyInfo(model);
         return "ProductReport";
@@ -1435,6 +1438,38 @@ public class AdminController {
         }
 
 
+    }
+
+    @GetMapping("/api/products/search")
+    @ResponseBody
+    public List<Map<String, Object>> searchProducts(@RequestParam String query) {
+        return productRepo.findByPNameContainingIgnoreCase(query)
+                .stream()
+                .sorted(Comparator.comparing(Product::getPName, String.CASE_INSENSITIVE_ORDER))
+                .map(p -> {
+                    Map<String, Object> productMap = new HashMap<>();
+                    productMap.put("id", p.getPId());
+                    productMap.put("name", p.getPName());
+                    productMap.put("prize", p.getPrize());
+                    return productMap;
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    @GetMapping("/api/products/{id}")
+    @ResponseBody
+    public Map<String, Object> getProductById(@PathVariable Long id) {
+        System.out.println("working");
+        return productRepo.findById(id)
+                .map(p -> {
+                    Map<String, Object> productMap = new HashMap<>();
+                    productMap.put("id", p.getPId());
+                    productMap.put("name", p.getPName());
+                    productMap.put("prize", p.getPrize());   // <-- IMPORTANT
+                    return productMap;
+                })
+                .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
 

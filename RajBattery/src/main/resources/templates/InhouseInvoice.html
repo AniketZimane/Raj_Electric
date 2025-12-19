@@ -16,13 +16,26 @@
     <link rel="stylesheet" href="/assestad/css/Pretty-Login-Form-.css">
     <link rel="stylesheet" href="/assestad/css/select.css">
 
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="/assestad/js/Manipulation.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script src="/assestad/js/clock.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.full.min.js"></script>
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- ✅ SweetAlert -->
+<!--    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Your scripts -->
+    <script src="/assestad/js/searchProduct.js"></script>
+    <script src="/assestad/js/Manipulation.js"></script>
 
 
 
@@ -31,10 +44,10 @@
 <body id="page-top">
 
     <div id="wrapper">
-        <div th:replace="fragmen1.html ::adminfragment1"></div>
+        <div th:replace="~{fragment1 ::adminfragment1}"></div>
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
-                <div th:replace="fragment2.html ::adminfragfragment2"></div>
+                <div th:replace="~{fragment2 ::adminfragment2}"></div>
                 <div class="container-fluid">
                     <h3 class="text-dark mb-4">Product Info</h3>
                     <div class="card shadow"></div>
@@ -83,11 +96,11 @@
                                                                     <table class="table table-sm">
                                                                         <thead class="text-dark font-md">
                                                                             <tr class="text-dark-blue">
-                                                                                <th class="text-center w-3x"><strong>Is have Old Battery</strong></th>
+<!--                                                                                <th class="text-center w-3x"><strong>Is have Old Battery</strong></th>-->
                                                                                 <th><strong>Product name</strong></th>
                                                                                 <th class="w-10x"><strong>Serial Number.</strong></th>
-                                                                                <th class="w-10x"><strong>Old Battery Weight</strong></th>
-                                                                                <th class="w-10x"><strong>Old Battery Price</strong></th>
+<!--                                                                                <th class="w-10x"><strong>Old Battery Weight</strong></th>-->
+<!--                                                                                <th class="w-10x"><strong>Old Battery Price</strong></th>-->
                                                                                 <th class="w-10x"><strong>Qty.</strong></th>
 <!--                                                                                <th class="w-10x"><strong>Size</strong></th>-->
                                                                                 <th class="w-10x"><strong>Rate</strong></th>
@@ -96,25 +109,33 @@
                                                                         </thead>
                                                                         <tbody class="h-15x">
                                                                             <tr>
-                                                                                <td class="text-center w-3x pt-2">
-                                                                                    <input id="oldOptionChk" type="checkbox">
-                                                                                </td>
+<!--                                                                                <td class="text-center w-3x pt-2">-->
+<!--                                                                                    <input id="oldOptionChk" type="checkbox">-->
+<!--                                                                                </td>-->
                                                                                 <td>
-                                                                                    <select class="form-select form-select-sm tbl-wfx kot-table font-sm" name="prodId" id="productSelect">
-                                                                                        <option value="" disabled selected>-- Select Product --</option>
-                                                                                        <!-- Dynamically populated options -->
-                                                                                    </select>
+<!--                                                                                    <select class="form-select form-select-sm tbl-wfx kot-table font-sm" name="prodId" id="productSelect">-->
+<!--                                                                                        <option value="" disabled selected>&#45;&#45; Select Product &#45;&#45;</option>-->
+<!--                                                                                        &lt;!&ndash; Dynamically populated options &ndash;&gt;-->
+<!--                                                                                    </select>-->
+                                                                                    <select id="productSelect" style="width:100%"></select>
+
+                                                                                    <!--                                                                                    <input list="productList" id="productSelect" name="prodId" class="form-control form-control-sm font-sm" placeholder="Search Product">-->
+
+<!--                                                                                    <datalist id="productList">-->
+<!--                                                                                        <option th:each="product : ${productList}" th:value="${product.name}" th:text="${product.name}"></option>-->
+<!--                                                                                    </datalist>-->
+
 
                                                                                 </td>
                                                                                 <td class="w-10x">
                                                                                     <div class="mb-1 form-group"><input id="seriesNo" name="seriesNo" class="form-control form-control-sm font-sm" type="text"  placeholder="serial number"></div>
                                                                                 </td>
-                                                                                <td class="w-10x">
-                                                                                    <div class="mb-1 form-group"><input id="OldWight" name="OldWight" class="form-control form-control-sm font-sm" type="text"  placeholder="Old Battery weight" disabled></div>
-                                                                                </td>
-                                                                                <td class="w-10x">
-                                                                                    <div class="mb-1 form-group"><input id="OldRate" name="OldRate" class="form-control form-control-sm font-sm" type="text"  placeholder="Old battery Price" disabled></div>
-                                                                                </td>
+<!--                                                                                <td class="w-10x">-->
+<!--                                                                                    <div class="mb-1 form-group"><input id="OldWight" name="OldWight" class="form-control form-control-sm font-sm" type="text"  placeholder="Old Battery weight" disabled></div>-->
+<!--                                                                                </td>-->
+<!--                                                                                <td class="w-10x">-->
+<!--                                                                                    <div class="mb-1 form-group"><input id="OldRate" name="OldRate" class="form-control form-control-sm font-sm" type="text"  placeholder="Old battery Price" disabled></div>-->
+<!--                                                                                </td>-->
                                                                                 <td class="w-10x">
                                                                                     <div class="mb-1 form-group"><input id="qtyValue" name="prodQty" class="form-control form-control-sm font-sm" type="number" step="1" min="1" pattern="^\d+$"></div>
                                                                                 </td>
@@ -289,11 +310,39 @@
             </div>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-    <script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/assestad/js/bs-init.js"></script>
-    <script src="/assestad/js/Billing-Table-with-Add-Row--Fixed-Header-Feature-Billing-Table-with-Add-Row--Fixed-Header.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="/assestad/js/theme.js"></script>
+
+    <!-- ✅ Bootstrap -->
+    <script src="/assestad/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ✅ Select2 + Product Search Logic -->
+    <script>
+$('#productSelect').on('change', function () {
+    const productId = $(this).val();
+    if (!productId) return;
+
+    axios.get(`/api/products/${productId}`)
+        .then(response => {
+            const product = response.data;
+            console.log(product);
+            $('#rate').val(product.prize);
+
+            const qty = parseFloat($('#qtyValue').val()) || 1;
+            $('#totalAmt').val(product.price * qty);  // FIXED HERE
+        })
+        .catch(error => {
+            console.error("Error fetching product details:", error);
+        });
+});
+
+// Qty change calculation
+$('#qtyValue').on('input', function () {
+    const rate = parseFloat($('#rate').val()) || 0;
+    const qty = parseFloat($(this).val()) || 1;
+
+    $('#totalAmt').val(rate * qty);
+});
+
+</script>
 </body>
 
 </html>

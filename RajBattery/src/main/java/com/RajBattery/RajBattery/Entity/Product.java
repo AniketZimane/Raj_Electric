@@ -7,9 +7,12 @@ import java.time.LocalDate;
 
 @Entity
 public class Product {
+//    @Id
+
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
+//    @SequenceGenerator(name = "product_seq")
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
-    @SequenceGenerator(name = "product_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long PId;
     String category;
     String PName;
@@ -33,6 +36,17 @@ public class Product {
 
     public Product(Long PId, String category, String PName, String CName, Double prize, String extension, String pmode, String description, LocalDate arrivalDate) {
         this.PId = PId;
+        this.category = category;
+        this.PName = PName;
+        this.CName = CName;
+        this.prize = prize;
+        this.extension = extension;
+        Pmode = pmode;
+        this.description = description;
+        this.arrivalDate = arrivalDate;
+    }
+
+    public Product(String category, String PName, String CName, Double prize, String extension, String pmode, String description, LocalDate arrivalDate) {
         this.category = category;
         this.PName = PName;
         this.CName = CName;

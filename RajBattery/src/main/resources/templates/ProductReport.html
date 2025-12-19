@@ -60,10 +60,10 @@
 
 </script>
     <div id="wrapper" >
-        <div th:replace="fragmen1.html ::adminfragment1"></div>
+        <div th:replace="~{fragment1 ::adminfragment1}"></div>
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content" >
-                <div th:replace="fragment2.html ::adminfragfragment2"></div>
+                <div th:replace="~{fragment2 ::adminfragment2}"></div>
                 <div class="container-fluid">
                     <h3 class="text-dark mb-4">Product Report</h3>
                     <div class="card shadow">
@@ -131,27 +131,46 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 align-self-center">
-                                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite" th:text="'Showing '+${curPage}+' to '+${totalPages}+' of '+${recordSize}">Showing 1 to 10 of 27</p>
+                                    <p id="dataTable_info" class="dataTables_info"
+                                       th:text="'Page ' + (${curPage}+1) + ' of ' + ${totalPages} + ' | Total Records: ' + ${recordSize}">
+                                    </p>
+
                                 </div>
                                 <div class="col-md-6">
                                     <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                                         <ul class="pagination">
-                                            <li class="page-item" th:classappend="${(curPage == 1)} ? 'disabled'">
-                                                <a class="page-link" aria-label="Previous" th:href="@{/admin/additional/details/{curPage}/(curPage=${curPage-1})}"><span aria-hidden="true">«</span>
+
+                                            <!-- Previous Page -->
+                                            <li class="page-item" th:classappend="${curPage == 0} ? 'disabled'">
+                                                <a class="page-link"
+                                                   th:href="@{/Product/report/{p}(p=${curPage-1})}"
+                                                   aria-label="Previous">
+                                                    «
                                                 </a>
                                             </li>
-                                                <li class="page-item"
-                                                    th:classappend="${(pageNo == curPage) ? 'active' : ''}"
-                                                    th:each="pageNo : ${#numbers.sequence(0, totalPages - 1)}">
-                                                    <a class="page-link"
-                                                       th:href="@{/admin/additional/details/{curPage}/(curPage=${pageNo})}"
-                                                       th:text="${pageNo}">1</a>
-                                                </li>
-                                            <li class="page-item" th:classappend="${(curPage == totalPages)} ? 'disabled'">
-                                                <a class="page-link" aria-label="Next" th:href="@{/admin/additional/details/{curPage}/(curPage=${curPage+1})}"><span aria-hidden="true">»</span></a>
+
+                                            <!-- Page Numbers -->
+                                            <li class="page-item"
+                                                th:each="pageNo : ${#numbers.sequence(0, totalPages-1)}"
+                                                th:classappend="${pageNo == curPage} ? 'active'">
+                                                <a class="page-link"
+                                                   th:text="${pageNo + 1}"
+                                                   th:href="@{/Product/report/{p}(p=${pageNo})}">
+                                                </a>
                                             </li>
+
+                                            <!-- Next Page -->
+                                            <li class="page-item" th:classappend="${curPage == totalPages-1} ? 'disabled'">
+                                                <a class="page-link"
+                                                   th:href="@{/Product/report/{p}(p=${curPage+1})}"
+                                                   aria-label="Next">
+                                                    »
+                                                </a>
+                                            </li>
+
                                         </ul>
                                     </nav>
+
                                     </nav>
                                 </div>
                             </div>

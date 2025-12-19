@@ -16,7 +16,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="/assestad/js/clock.js"></script>
+<!--    <script src="/assestad/js/clock.js"></script>-->
 
 </head>
 
@@ -47,12 +47,12 @@
                     <div th:if="${param.logout}" class="alert alert-success">
                         You have been logged out.
                     </div>
-                    <form method="post" action="/login/">
+                    <form method="post" action="/login">
                         <div class="mb-3"><input class="shadow form-control" type="email" name="email" placeholder="Email"></div>
                         <div class="mb-3"><input class="shadow form-control" type="password" name="password" placeholder="Password"></div>
                         <div class="mb-5"><button class="btn btn-primary shadow" type="submit">Log in</button></div>
                         <p class="text-muted"><a href="forgotten-password.html" data-bs-target="#modal-1" data-bs-toggle="modal">Forgot your password?</a></p>
-                        <p class="text-muted"><a href="/signup/">I don't have account!</a></p>
+                        <p class="text-muted"><a href="/signup">I don't have account!</a></p>
                     </form>
                 </div>
             </div>

@@ -154,10 +154,20 @@ function renderInhouseInvoices(invoices) {
             // Send data to the backend
             axios.post('/save-item/', data)
                 .then(function (response) {
-                    swal({
-                        icon: "success",
-                        text: "Item added successfully"
-                    });
+//                    swal({
+//                        icon: "success",
+//                        text: "Item added successfully"
+//                    });
+
+                    Swal.fire({
+                                toast: true,
+                                position: 'top-end',   // TOP RIGHT
+                                icon: 'success',
+                                title: 'Item added successfully',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
                     // Clear form fields
                     productDropdown.val('');
                     qtyInput.val('');
@@ -167,10 +177,20 @@ function renderInhouseInvoices(invoices) {
                 })
                 .catch(function (error) {
                     console.error(error.response); // Log error response
-                    swal({
-                        icon: "info",
-                        text: error.response?.data?.message || "You can't sell more than the actual stock."
-                    });
+//                    swal({
+//                        icon: "info",
+//                        text: error.response?.data?.message || "You can't sell more than the actual stock."
+//                    });
+
+                    Swal.fire({
+                                toast: true,
+                                position: 'top-end',   // TOP RIGHT
+                                icon: 'info',
+                                title: error.response?.data?.message || "You can't sell more than the actual stock.",
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
                 });
         });
 
@@ -182,10 +202,20 @@ function renderInhouseInvoices(invoices) {
             var netAmt = $('#netAmt');
 
             if (!userName) {
-                swal({
-                    icon: "info",
-                    text: "Please provide a username."
-                });
+//                swal({
+//                    icon: "info",
+//                    text: "Please provide a username."
+//                });
+                Swal.fire({
+                            toast: true,
+                            position: 'top-end',   // TOP RIGHT
+                            icon: 'info',
+                            title: 'Please provide a username.',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+
                 return;
             }
 
@@ -197,10 +227,20 @@ function renderInhouseInvoices(invoices) {
                     console.log('Response:', orderData);
 
                     if (orderData.length === 0) {
-                        swal({
-                            icon: "info",
-                            text: "No orders found for the given username."
-                        });
+//                        swal({
+//                            icon: "info",
+//                            text: "No orders found for the given username."
+//                        });
+
+                        Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',   // TOP RIGHT
+                                    icon: 'info',
+                                    title: 'No orders found for the given username.',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true
+                                });
                         return;
                     }
 
@@ -209,18 +249,38 @@ function renderInhouseInvoices(invoices) {
                     netAmt.val('').prop('disabled', true);
                     $("#charges").val(28);
 
-                    swal({
-                        icon: "success",
-                        text: "Gross amount calculated and assigned successfully."
-                    });
+//                    swal({
+//                        icon: "success",
+//                        text: "Gross amount calculated and assigned successfully."
+//                    });
+
+                    Swal.fire({
+                                toast: true,
+                                position: 'top-end',   // TOP RIGHT
+                                icon: 'Gross amount calculated and assigned successfully.',
+                                title: msg,
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
                 })
                 .catch(function (error) {
                     console.error('Error fetching details:', error);
 
-                    swal({
-                        icon: "error",
-                        text: "Failed to fetch details. Please try again."
-                    });
+//                    swal({
+//                        icon: "error",
+//                        text: "Failed to fetch details. Please try again."
+//                    });
+
+                    Swal.fire({
+                                toast: true,
+                                position: 'top-end',   // TOP RIGHT
+                                icon: 'error',
+                                title: 'Failed to fetch details. Please try again.',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
                 });
         });
 
@@ -296,10 +356,20 @@ function renderInhouseInvoices(invoices) {
 //        return "redirect:/admin/invoice/?userName=" + URLEncoder.encode(userName, StandardCharsets.UTF_8);
     })
     .catch(function (error) {
-        swal({
-            icon: "error",
-            text: "Failed to create invoice. Please try again."
-        });
+//        swal({
+//            icon: "error",
+//            text: "Failed to create invoice. Please try again."
+//        });
+
+        Swal.fire({
+                    toast: true,
+                    position: 'top-end',   // TOP RIGHT
+                    icon: 'error',
+                    title: 'Failed to create invoice. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
     });
 
     });
@@ -444,4 +514,5 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listener to checkb
         checkbox.addEventListener('change', toggleInputs);
     });
+
 
