@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Register Your Company — ERP Portal</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #0d1b4b 0%, #1a2f7a 50%, #3949ab 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background: #fff; border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+            width: 100%; max-width: 680px; overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #0d1b4b, #3949ab);
+            padding: 2rem 2.5rem 1.75rem; color: #fff; text-align: center;
+        }
+        .card-header .erp-chip {
+            display: inline-flex; align-items: center; gap: .4rem;
+            background: rgba(255,255,255,.15); border-radius: 20px;
+            padding: .3rem .9rem; font-size: .7rem; font-weight: 700;
+            letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1rem;
+        }
+        .card-header h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: .4rem; }
+        .card-header p  { font-size: .85rem; opacity: .75; }
+
+        .card-body { padding: 2rem 2.5rem; }
+
+        .section-label {
+            font-size: .65rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .1em; color: #8a94a6; margin: 1.5rem 0 .75rem;
+            display: flex; align-items: center; gap: .5rem;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: #e4e7ef; }
+        .section-label:first-child { margin-top: 0; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 540px) { .form-row { grid-template-columns: 1fr; } }
+        .form-row.full { grid-template-columns: 1fr; }
+
+        .form-group { display: flex; flex-direction: column; gap: .35rem; }
+        .form-group label {
+            font-size: .72rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: #8a94a6;
+        }
+        .form-group input, .form-group select {
+            border: 1.5px solid #e4e7ef; border-radius: 10px;
+            padding: .6rem .9rem; font-family: 'Nunito', sans-serif;
+            font-size: .88rem; color: #0d1b4b; outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #3949ab; box-shadow: 0 0 0 3px rgba(57,73,171,.12);
+        }
+
+        .btn-submit {
+            width: 100%; padding: .85rem; border-radius: 12px;
+            background: linear-gradient(135deg, #0d1b4b, #3949ab);
+            color: #fff; font-family: 'Nunito', sans-serif;
+            font-size: .95rem; font-weight: 800; border: none;
+            cursor: pointer; margin-top: 1.75rem;
+            transition: opacity .2s, transform .15s;
+        }
+        .btn-submit:hover { opacity: .9; transform: translateY(-1px); }
+
+        .card-footer {
+            text-align: center; padding: 1.25rem 2.5rem 1.75rem;
+            font-size: .82rem; color: #8a94a6; border-top: 1px solid #f0f2f8;
+        }
+        .card-footer a { color: #3949ab; font-weight: 700; text-decoration: none; }
+        .card-footer a:hover { text-decoration: underline; }
+
+        .alert {
+            border-radius: 10px; font-size: .85rem; padding: .75rem 1rem;
+            margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: .6rem;
+        }
+        .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+        .alert-danger  { background: #fff5f5; border: 1px solid #fecaca; color: #b91c1c; }
+    </style>
+</head>
+<body>
+<div class="card">
+
+    <div class="card-header">
+        <div class="erp-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            ERP Portal
+        </div>
+        <h2>Register Your Company</h2>
+        <p>Submit your company details for review. Our IT team will approve your account within 24 hours.</p>
+    </div>
+
+    <div class="card-body">
+
+        <div th:if="${msg}"  class="alert alert-success">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            <span th:text="${msg}"></span>
+        </div>
+        <div th:if="${emsg}" class="alert alert-danger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            <span th:text="${emsg}"></span>
+        </div>
+
+        <form action="/register-company/" method="post">
+
+            <div class="section-label">Company Identity</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Company Name *</label>
+                    <input type="text" name="orgName" placeholder="e.g. Raj Hardware & Traders" required>
+                </div>
+                <div class="form-group">
+                    <label>Business Email *</label>
+                    <input type="email" name="orgEmail" placeholder="contact@yourcompany.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="orgPhone" placeholder="+91 98765 43210">
+                </div>
+                <div class="form-group">
+                    <label>Industry</label>
+                    <select name="industry">
+                        <option value="">— Select Industry —</option>
+                        <option value="Battery">Battery</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Automobile">Automobile</option>
+                        <option value="Retail">Retail</option>
+                        <option value="Manufacturing">Manufacturing</option>
+                        <option value="Trading">Trading</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section-label">Tax & Legal</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>GST Number</label>
+                    <input type="text" name="gstNumber" placeholder="22AAAAA0000A1Z5" maxlength="15">
+                </div>
+                <div class="form-group">
+                    <label>PAN Number</label>
+                    <input type="text" name="panNumber" placeholder="AAAAA0000A" maxlength="10">
+                </div>
+                <div class="form-group">
+                    <label>Website</label>
+                    <input type="url" name="website" placeholder="https://yourcompany.com">
+                </div>
+            </div>
+
+            <div class="section-label">Address</div>
+            <div class="form-row full">
+                <div class="form-group">
+                    <label>Street Address</label>
+                    <input type="text" name="orgAddress" placeholder="123, Main Street">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" name="orgCity" placeholder="Mumbai">
+                </div>
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" name="orgState" placeholder="Maharashtra">
+                </div>
+                <div class="form-group">
+                    <label>Pincode</label>
+                    <input type="text" name="orgPincode" placeholder="400001" maxlength="6">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Submit for Approval →</button>
+        </form>
+    </div>
+
+    <div class="card-footer">
+        Already have an account? <a href="/login">Sign in</a> &nbsp;·&nbsp;
+        New user? <a href="/signup/">Register here</a>
+    </div>
+</div>
+</body>
+</html>

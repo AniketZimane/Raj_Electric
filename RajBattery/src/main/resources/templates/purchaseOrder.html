@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>New Purchase Order</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap">
+    <style>
+        body { font-family: 'Nunito', sans-serif; background: #f0f2f8; margin: 0; }
+        #wrapper { display: flex; min-height: 100vh; }
+        #content-wrapper { flex: 1; min-width: 0; overflow-x: hidden; }
+
+        .page-header {
+            background: #fff; border-radius: 16px; padding: 1.25rem 1.75rem;
+            margin-bottom: 1.5rem; box-shadow: 0 1px 6px rgba(0,0,0,.06);
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+        }
+        .page-header h3 { font-weight: 800; color: #0d1b4b; margin: 0; font-size: 1.2rem; }
+
+        .section-card {
+            background: #fff; border-radius: 16px; padding: 1.5rem;
+            box-shadow: 0 1px 6px rgba(0,0,0,.06); margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: .8rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .08em; color: #0d1b4b; margin-bottom: 1.25rem;
+        }
+
+        .form-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #8a94a6; }
+        .form-control, .form-select {
+            border: 1.5px solid #e4e7ef; border-radius: 8px;
+            font-family: 'Nunito', sans-serif; font-size: .88rem; color: #0d1b4b;
+        }
+        .form-control:focus, .form-select:focus { border-color: #3949ab; box-shadow: 0 0 0 3px rgba(57,73,171,.12); }
+
+        .erp-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .erp-table thead th {
+            background: #f0f2f8; color: #0d1b4b; font-size: .7rem;
+            font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+            padding: .7rem 1rem; border: none;
+        }
+        .erp-table thead th:first-child { border-radius: 10px 0 0 10px; }
+        .erp-table thead th:last-child  { border-radius: 0 10px 10px 0; }
+        .erp-table tbody td {
+            padding: .5rem .75rem; font-size: .85rem; color: #374151;
+            border-bottom: 1px solid #f0f2f8; vertical-align: middle;
+        }
+        .erp-table tbody tr:last-child td { border-bottom: none; }
+        .erp-table tfoot td { padding: .75rem 1rem; font-weight: 800; color: #0d1b4b; font-size: .95rem; }
+
+        .btn-erp {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: .4rem 1rem; border-radius: 8px; font-size: .8rem;
+            font-weight: 700; text-decoration: none; border: none; cursor: pointer;
+            transition: opacity .2s;
+        }
+        .btn-erp:hover { opacity: .85; }
+        .btn-back        { background: #f0f2f8; color: #0d1b4b; }
+        .btn-primary-erp { background: #3949ab; color: #fff; }
+        .btn-danger-erp  { background: #fee2e2; color: #991b1b; }
+        .btn-add-row     { background: #dcfce7; color: #166534; }
+
+        #toast-msg {
+            position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;
+            background: #0d1b4b; color: #fff; padding: .6rem 1.2rem;
+            border-radius: 10px; font-size: .85rem; font-weight: 700;
+            display: none; box-shadow: 0 4px 16px rgba(0,0,0,.18);
+        }
+    </style>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <div th:replace="~{fragment1 ::adminfragment1}"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <div th:replace="~{fragment2 ::adminfragment2}"></div>
+            <div class="container-fluid px-4 py-3">
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h3>New Purchase Order</h3>
+                        <small>Create a purchase order and send it to a vendor</small>
+                    </div>
+                    <a href="/purchase-orders/" class="btn-erp btn-back">← Back to List</a>
+                </div>
+
+                <!-- Vendor + Notes -->
+                <div class="section-card">
+                    <div class="section-title">Order Details</div>
+                    <div class="row g-3">
+                        <div class="col-md-5">
+                            <label class="form-label">Vendor *</label>
+                            <select id="vendorId" class="form-select">
+                                <option value="">— Select Vendor —</option>
+                                <option th:each="v : ${vendors}" th:value="${v.id}" th:text="${v.vendorName}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-7">
+                            <label class="form-label">Notes</label>
+                            <input type="text" id="notes" class="form-control" placeholder="Optional notes for this order">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Line Items -->
+                <div class="section-card">
+                    <div class="section-title">Line Items</div>
+                    <div class="table-responsive">
+                        <table class="erp-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product Name *</th>
+                                    <th style="width:120px;">Qty *</th>
+                                    <th style="width:140px;">Unit Rate (₹) *</th>
+                                    <th style="width:140px;">Total</th>
+                                    <th style="width:60px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsBody">
+                                <!-- rows injected by JS -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" style="text-align:right;">Grand Total</td>
+                                    <td>₹<span id="grandTotal">0.00</span></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn-erp btn-add-row" onclick="addRow()">+ Add Item</button>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex gap-2 mb-4">
+                    <button class="btn-erp btn-primary-erp" onclick="submitPO(false)">Save as Draft</button>
+                    <button class="btn-erp" style="background:#0d1b4b;color:#fff;" onclick="submitPO(true)">Save &amp; Send to Vendor</button>
+                </div>
+
+            </div>
+        </div>
+        <footer class="bg-white sticky-footer mt-auto">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright py-3">
+                    <span class="text-muted" style="font-size:.8rem;">Copyright © ERP System 2026</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top"></a>
+</div>
+<div id="toast-msg"></div>
+<script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assestad/js/theme.js"></script>
+<script>
+    let rowCount = 0;
+
+    function addRow() {
+        rowCount++;
+        const tbody = document.getElementById('itemsBody');
+        const tr = document.createElement('tr');
+        tr.id = 'row-' + rowCount;
+        tr.innerHTML = `
+            <td>${rowCount}</td>
+            <td><input type="text" class="form-control form-control-sm pname" placeholder="Product name" oninput="recalc()"></td>
+            <td><input type="number" class="form-control form-control-sm qty" min="1" value="1" oninput="recalc()"></td>
+            <td><input type="number" class="form-control form-control-sm rate" min="0" step="0.01" value="0" oninput="recalc()"></td>
+            <td class="row-total">₹0.00</td>
+            <td><button class="btn-erp btn-danger-erp" style="padding:.25rem .6rem;" onclick="removeRow(${rowCount})">✕</button></td>
+        `;
+        tbody.appendChild(tr);
+        recalc();
+    }
+
+    function removeRow(id) {
+        const el = document.getElementById('row-' + id);
+        if (el) el.remove();
+        recalc();
+    }
+
+    function recalc() {
+        let grand = 0;
+        document.querySelectorAll('#itemsBody tr').forEach(tr => {
+            const qty  = parseFloat(tr.querySelector('.qty')?.value  || 0);
+            const rate = parseFloat(tr.querySelector('.rate')?.value || 0);
+            const total = qty * rate;
+            grand += total;
+            const cell = tr.querySelector('.row-total');
+            if (cell) cell.textContent = '₹' + total.toFixed(2);
+        });
+        document.getElementById('grandTotal').textContent = grand.toFixed(2);
+    }
+
+    function showToast(msg, ok) {
+        const t = document.getElementById('toast-msg');
+        t.textContent = msg;
+        t.style.background = ok ? '#166534' : '#991b1b';
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3500);
+    }
+
+    async function submitPO(sendNow) {
+        const vendorId = document.getElementById('vendorId').value;
+        if (!vendorId) { showToast('Please select a vendor.', false); return; }
+
+        const items = [];
+        let valid = true;
+        document.querySelectorAll('#itemsBody tr').forEach(tr => {
+            const name = tr.querySelector('.pname')?.value.trim();
+            const qty  = parseFloat(tr.querySelector('.qty')?.value  || 0);
+            const rate = parseFloat(tr.querySelector('.rate')?.value || 0);
+            if (!name) { valid = false; return; }
+            items.push({ productName: name, quantity: qty, unitRate: rate });
+        });
+
+        if (!valid || items.length === 0) { showToast('Add at least one item with a product name.', false); return; }
+
+        const notes = document.getElementById('notes').value.trim();
+
+        try {
+            const res = await fetch('/api/purchase-order/create/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ vendorId, notes, items })
+            });
+            const data = await res.json();
+            if (!res.ok || data.error) { showToast(data.error || 'Failed to create PO.', false); return; }
+
+            if (sendNow) {
+                await fetch('/api/purchase-order/send/' + data.poId + '/', { method: 'POST' });
+            }
+            window.location.href = '/purchase-order/view/' + data.poId + '/';
+        } catch (e) {
+            showToast('Network error. Please try again.', false);
+        }
+    }
+
+    // Start with one empty row
+    addRow();
+</script>
+</body>
+</html>

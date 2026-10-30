@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Purchase Orders</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <style>
+        body { font-family: 'Nunito', sans-serif; background: #f0f2f8; margin: 0; }
+        #wrapper { display: flex; min-height: 100vh; }
+        #content-wrapper { flex: 1; min-width: 0; overflow-x: hidden; }
+
+        .page-header {
+            background: #fff; border-radius: 16px; padding: 1.25rem 1.75rem;
+            margin-bottom: 1.5rem; box-shadow: 0 1px 6px rgba(0,0,0,.06);
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+        }
+        .page-header h3 { font-weight: 800; color: #0d1b4b; margin: 0; font-size: 1.2rem; }
+        .page-header small { color: #8a94a6; font-size: .8rem; }
+
+        .stat-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .stat-chip {
+            flex: 1; min-width: 120px; background: #fff; border-radius: 12px;
+            padding: .9rem 1.2rem; box-shadow: 0 1px 6px rgba(0,0,0,.06);
+            text-align: center;
+        }
+        .chip-val   { font-size: 1.5rem; font-weight: 800; color: #0d1b4b; }
+        .chip-label { font-size: .7rem; color: #8a94a6; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+
+        .section-card {
+            background: #fff; border-radius: 16px; padding: 1.5rem;
+            box-shadow: 0 1px 6px rgba(0,0,0,.06); margin-bottom: 1.5rem;
+        }
+
+        .erp-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .erp-table thead th {
+            background: #f0f2f8; color: #0d1b4b; font-size: .7rem;
+            font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+            padding: .7rem 1rem; border: none;
+        }
+        .erp-table thead th:first-child { border-radius: 10px 0 0 10px; }
+        .erp-table thead th:last-child  { border-radius: 0 10px 10px 0; }
+        .erp-table tbody td {
+            padding: .75rem 1rem; font-size: .85rem; color: #374151;
+            border-bottom: 1px solid #f0f2f8; vertical-align: middle;
+        }
+        .erp-table tbody tr:last-child td { border-bottom: none; }
+        .erp-table tbody tr:hover td { background: #f8faff; }
+
+        .status-pill {
+            display: inline-block; padding: 3px 10px; border-radius: 20px;
+            font-size: .7rem; font-weight: 700; letter-spacing: .04em;
+        }
+        .pill-draft  { background: #fef9c3; color: #854d0e; }
+        .pill-sent   { background: #dbeafe; color: #1e40af; }
+        .pill-ack    { background: #e0e7ff; color: #3730a3; }
+        .pill-done   { background: #dcfce7; color: #166534; }
+        .pill-cancel { background: #fee2e2; color: #991b1b; }
+
+        .btn-erp {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: .35rem .85rem; border-radius: 8px; font-size: .78rem;
+            font-weight: 700; text-decoration: none; border: none; cursor: pointer;
+            transition: opacity .2s;
+        }
+        .btn-erp:hover { opacity: .85; }
+        .btn-primary-erp { background: #3949ab; color: #fff; }
+        .btn-view-erp    { background: #0d9488; color: #fff; }
+
+        .pagination .page-link { border-radius: 8px; font-size: .8rem; color: #3949ab; border-color: #e4e7ef; }
+        .pagination .page-item.active .page-link { background: #3949ab; border-color: #3949ab; }
+    </style>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <div th:replace="~{fragment1 ::adminfragment1}"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <div th:replace="~{fragment2 ::adminfragment2}"></div>
+            <div class="container-fluid px-4 py-3">
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h3>Purchase Orders</h3>
+                        <small>Manage and track all purchase orders</small>
+                    </div>
+                    <a href="/purchase-order/new/" class="btn-erp btn-primary-erp">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        New Purchase Order
+                    </a>
+                </div>
+
+                <!-- Status Summary Chips -->
+                <div class="stat-row" th:if="${statusCounts != null}">
+                    <div class="stat-chip">
+                        <div class="chip-val" th:text="${statusCounts['DRAFT'] ?: 0}">0</div>
+                        <div class="chip-label">Draft</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="chip-val" th:text="${statusCounts['SENT'] ?: 0}">0</div>
+                        <div class="chip-label">Sent</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="chip-val" th:text="${statusCounts['ACKNOWLEDGED'] ?: 0}">0</div>
+                        <div class="chip-label">Acknowledged</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="chip-val" th:text="${statusCounts['COMPLETED'] ?: 0}">0</div>
+                        <div class="chip-label">Completed</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="chip-val" th:text="${statusCounts['CANCELLED'] ?: 0}">0</div>
+                        <div class="chip-label">Cancelled</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="chip-val" th:text="${recordSize}">0</div>
+                        <div class="chip-label">Total</div>
+                    </div>
+                </div>
+
+                <!-- PO Table -->
+                <div class="section-card">
+                    <div th:if="${#lists.isEmpty(poList)}" style="text-align:center;padding:3rem;color:#8a94a6;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="#c4c9d4" style="margin-bottom:.75rem;display:block;margin-left:auto;margin-right:auto;">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        No purchase orders yet. <a href="/purchase-order/new/" style="color:#3949ab;font-weight:700;">Create one →</a>
+                    </div>
+
+                    <div th:if="${!#lists.isEmpty(poList)}" class="table-responsive">
+                        <table class="erp-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>PO Number</th>
+                                    <th>Vendor</th>
+                                    <th>Total Amount</th>
+                                    <th>Status</th>
+                                    <th>Created By</th>
+                                    <th>Created On</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="po, i : ${poList}">
+                                    <td th:text="${(curPage - 1) * 10 + i.count}">1</td>
+                                    <td><strong th:text="${po.poNumber}">PO-001</strong></td>
+                                    <td th:text="${po.vendor != null ? po.vendor.vendorName : '—'}">Vendor</td>
+                                    <td>₹<span th:text="${#numbers.formatDecimal(po.totalAmount, 1, 2)}">0.00</span></td>
+                                    <td>
+                                        <span class="status-pill pill-draft"  th:if="${po.status == 'DRAFT'}"        th:text="${po.status}"></span>
+                                        <span class="status-pill pill-sent"   th:if="${po.status == 'SENT'}"         th:text="${po.status}"></span>
+                                        <span class="status-pill pill-ack"    th:if="${po.status == 'ACKNOWLEDGED'}" th:text="${po.status}"></span>
+                                        <span class="status-pill pill-done"   th:if="${po.status == 'COMPLETED'}"    th:text="${po.status}"></span>
+                                        <span class="status-pill pill-cancel" th:if="${po.status == 'CANCELLED'}"    th:text="${po.status}"></span>
+                                    </td>
+                                    <td th:text="${po.createdBy ?: '—'}">Admin</td>
+                                    <td th:text="${po.createdAt != null ? #temporals.format(po.createdAt, 'dd-MM-yyyy HH:mm') : '—'}">—</td>
+                                    <td>
+                                        <a th:href="@{/purchase-order/view/{id}/(id=${po.id})}" class="btn-erp btn-view-erp">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div th:if="${totalPages > 1}" class="d-flex justify-content-between align-items-center mt-3">
+                        <small class="text-muted" th:text="'Showing page ' + ${curPage} + ' of ' + ${totalPages} + ' (' + ${recordSize} + ' records)'"></small>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item" th:classappend="${curPage == 1} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/purchase-orders/(page=${curPage - 1})}">«</a>
+                                </li>
+                                <li class="page-item" th:each="p : ${#numbers.sequence(1, totalPages)}"
+                                    th:classappend="${p == curPage} ? 'active'">
+                                    <a class="page-link" th:href="@{/purchase-orders/(page=${p})}" th:text="${p}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${curPage == totalPages} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/purchase-orders/(page=${curPage + 1})}">»</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <footer class="bg-white sticky-footer mt-auto">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright py-3">
+                    <span class="text-muted" style="font-size:.8rem;">Copyright © ERP System 2026</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+</div>
+<script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assestad/js/theme.js"></script>
+</body>
+</html>

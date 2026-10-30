@@ -1,97 +1,184 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https:www.thymeleaf.org">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Log in - Brand</title>
+    <title>ERP — Sign In</title>
     <link rel="stylesheet" href="/user_assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900">
-    <link rel="stylesheet" href="/user_assets/css/Card-Store.css">
-    <link rel="stylesheet" href="/user_assets/css/Company-Invoice.css">
-    <link rel="stylesheet" href="/user_assets/css/Ludens---Create-Edit-Form.css">
-    <link rel="stylesheet" href="/user_assets/css/Pretty-Login-Form-.css">
-    <link rel="stylesheet" href="/user_assets/css/select.css">
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<!--    <script src="/assestad/js/clock.js"></script>-->
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Nunito', sans-serif; min-height: 100vh; display: flex; background: #f0f4f8; }
 
+        /* ── Left panel ── */
+        .panel-left {
+            flex: 1;
+            background: linear-gradient(145deg, #0d1b4b 0%, #1a2f7a 50%, #2a45a8 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 3rem 2.5rem; color: #fff; position: relative; overflow: hidden;
+        }
+        .panel-left::before {
+            content: ''; position: absolute; top: -100px; right: -100px;
+            width: 350px; height: 350px; border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+        .panel-left::after {
+            content: ''; position: absolute; bottom: -80px; left: -80px;
+            width: 280px; height: 280px; border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .panel-icon {
+            width: 72px; height: 72px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; margin-bottom: 1.75rem;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .panel-heading { font-size: 1.9rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+        .panel-sub {
+            font-size: 0.875rem; opacity: 0.65; text-align: center;
+            max-width: 260px; line-height: 1.7; margin-bottom: 2.5rem;
+        }
+        .feature-list { list-style: none; width: 100%; max-width: 280px; }
+        .feature-list li {
+            display: flex; align-items: center; gap: 0.75rem;
+            font-size: 0.85rem; opacity: 0.85; padding: 0.55rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .feature-list li:last-child { border-bottom: none; }
+        .feat-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: rgba(255,255,255,0.5); flex-shrink: 0;
+        }
+
+        /* ── Right panel ── */
+        .panel-right {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 2.5rem; background: #fff;
+        }
+        .form-box { width: 100%; max-width: 400px; }
+
+        .erp-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #eef0fb; color: #3949ab;
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; padding: 5px 12px; border-radius: 20px;
+            margin-bottom: 1.25rem;
+        }
+        .erp-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #3949ab; }
+
+        .form-box h2 { font-size: 1.65rem; font-weight: 800; color: #0d1b4b; margin-bottom: 0.3rem; }
+        .form-box .hint { color: #8a94a6; font-size: 0.85rem; margin-bottom: 2rem; }
+
+        .form-floating .form-control {
+            border: 1.5px solid #e4e7ef; border-radius: 10px;
+            height: 54px; font-size: 0.9rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-floating .form-control:focus {
+            border-color: #3949ab; box-shadow: 0 0 0 3px rgba(57,73,171,0.1); outline: none;
+        }
+        .form-floating label { color: #8a94a6; font-size: 0.875rem; }
+
+        .btn-primary-erp {
+            width: 100%; padding: 0.8rem 1rem; border-radius: 10px;
+            font-weight: 700; font-size: 0.95rem;
+            background: linear-gradient(135deg, #0d1b4b, #3949ab);
+            border: none; color: #fff;
+            transition: opacity 0.2s, transform 0.15s;
+            margin-top: 0.25rem; letter-spacing: 0.3px;
+        }
+        .btn-primary-erp:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-primary-erp:active { transform: translateY(0); }
+
+        .remember-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+        .form-check-label { font-size: 0.825rem; color: #8a94a6; }
+
+        .alert { border-radius: 10px; font-size: 0.85rem; padding: 0.75rem 1rem; }
+        .alert-danger { background: #fff5f5; border: 1px solid #fecaca; color: #b91c1c; }
+        .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+
+        .bottom-link { text-align: center; margin-top: 1.75rem; font-size: 0.85rem; color: #8a94a6; }
+        .bottom-link a { color: #3949ab; font-weight: 700; text-decoration: none; }
+        .bottom-link a:hover { text-decoration: underline; }
+
+        .footer-note { text-align: center; margin-top: 2.5rem; font-size: 0.72rem; color: #c4c9d4; letter-spacing: 0.3px; }
+
+        @media (max-width: 768px) {
+            .panel-left { display: none; }
+            .panel-right { background: #f5f7ff; }
+        }
+    </style>
 </head>
-
 <body>
 <script th:inline="javascript">
-       var msg=[[${msg}]]
-       var emsg=[[${emsg}]]
-       if(msg!=null)
-       {
-               swal("Good job!", msg, "success");
-        }
-        if(emsg!=null)
-        {
-               swal("Opps!", emsg, "info");
-
-        }
+    var msg = [[${msg}]];
+    var emsg = [[${emsg}]];
+    if (msg != null) swal("Success!", msg, "success");
+    if (emsg != null) swal("Oops!", emsg, "warning");
 </script>
-    <section class="py-4 py-md-5 my-5">
-        <div class="container py-md-5">
-            <div class="row">
-                <div class="col-md-6 text-center"><img class="img-fluid w-100" src="/user_assets/img/illustrations/login.svg"></div>
-                <div class="col-md-5 col-xl-4 text-center text-md-start">
 
-                    <h2 class="display-6 fw-bold mb-5"><span class="underline pb-1"><strong>Login</strong><br></span></h2>
-                    <div th:if="${param.error}" class="alert alert-danger">
-                        Invalid username and password.
-                    </div>
-                    <div th:if="${param.logout}" class="alert alert-success">
-                        You have been logged out.
-                    </div>
-                    <form method="post" action="/login">
-                        <div class="mb-3"><input class="shadow form-control" type="email" name="email" placeholder="Email"></div>
-                        <div class="mb-3"><input class="shadow form-control" type="password" name="password" placeholder="Password"></div>
-                        <div class="mb-5"><button class="btn btn-primary shadow" type="submit">Log in</button></div>
-                        <p class="text-muted"><a href="forgotten-password.html" data-bs-target="#modal-1" data-bs-toggle="modal">Forgot your password?</a></p>
-                        <p class="text-muted"><a href="/signup">I don't have account!</a></p>
-                    </form>
-                </div>
+<div style="display:flex; width:100%; min-height:100vh;">
+
+    <!-- Left brand panel — generic, no client name -->
+    <div class="panel-left">
+        <div class="panel-icon">⚡</div>
+        <div class="panel-heading">Welcome Back</div>
+        <p class="panel-sub">Sign in to manage your business operations from one place.</p>
+        <ul class="feature-list">
+            <li><span class="feat-dot"></span>Inventory &amp; Stock Management</li>
+            <li><span class="feat-dot"></span>Invoice &amp; Billing System</li>
+            <li><span class="feat-dot"></span>Customer &amp; Order Tracking</li>
+            <li><span class="feat-dot"></span>Sales Reports &amp; Analytics</li>
+            <li><span class="feat-dot"></span>Purchase Order Management</li>
+        </ul>
+    </div>
+
+    <!-- Right form panel -->
+    <div class="panel-right">
+        <div class="form-box">
+            <div class="erp-chip">ERP Portal</div>
+            <h2>Sign In</h2>
+            <p class="hint">Enter your credentials to access your account</p>
+
+            <div th:if="${param.error}" class="alert alert-danger mb-3">
+                Invalid email or password. Please try again.
             </div>
-        </div>
-    </section>
-    <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Reset Password</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div th:if="${param.logout}" class="alert alert-success mb-3">
+                You have been logged out successfully.
+            </div>
+
+            <form method="post" action="/login">
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" required autofocus>
+                    <label for="email">Email address</label>
                 </div>
-                <div class="modal-body">
-                    <p>The content of your modal.</p>
-                    <div class="col-md-5 col-xl-4 text-center text-md-start" style="width: 300px;">
-                        <h2 class="display-6 fw-bold mb-5"><span class="underline pb-1"></span></h2>
-                        <form method="post" style="width: 400px;">
-                            <div class="mb-3"><input class="shadow form-control" type="email" name="email" placeholder="Email">
-                                <div class="d-lg-flex justify-content-lg-center"><button class="btn btn-secondary shadow" type="button" style="margin-top: 11px;border-radius: 10px;--bs-success: #0ed793;--bs-success-rgb: 14,215,147;background: var(--bs-green);border-color: var(--bs-btn-hover-border-color);color: var(--bs-btn-color);text-align: center;">Send Otp</button><button class="btn btn-success shadow" type="button" style="margin-top: 11px;border-radius: 10px;--bs-success: #0ed793;--bs-success-rgb: 14,215,147;background: var(--bs-green);border-color: var(--bs-btn-hover-border-color);color: var(--bs-btn-active-border-color);text-align: center;margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-counterclockwise" style="color: var(--bs-black);">
-                                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>
-                                            <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"></path>
-                                        </svg></button></div>
-                            </div>
-                            <div class="mb-3"><input class="shadow form-control" type="email" name="email" placeholder="Enter Otp"></div>
-                            <div class="d-lg-flex justify-content-lg-center" style="padding-bottom: 10px;"><button class="btn btn-secondary shadow" type="button" style="margin-top: 11px;border-radius: 10px;--bs-success: #0ed793;--bs-success-rgb: 14,215,147;background: var(--bs-green);border-color: var(--bs-btn-hover-border-color);color: var(--bs-black);text-align: center;">Send Otp</button></div>
-                            <div class="mb-3"><input class="shadow form-control" type="password" name="password" placeholder="Password"></div>
-                            <div class="mb-3"><input class="shadow form-control" type="password" name="rePassword" placeholder="Re Enter Password"></div>
-                            <div class="mb-5"><button class="btn btn-primary shadow" type="submit" style="border-radius: 10px;">Update</button></div>
-                            <p class="text-muted"><a href="forgotten-password.html" data-bs-target="#modal-1" data-bs-toggle="modal">Did You Remember Password?</a></p>
-                        </form>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <label for="password">Password</label>
+                </div>
+                <div class="remember-row">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="remember_me" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Remember me</label>
                     </div>
                 </div>
-                <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button></div>
+                <button type="submit" class="btn-primary-erp">Sign In →</button>
+            </form>
+
+            <div class="bottom-link">
+                Don't have an account? <a href="/signup">Create one</a>
             </div>
+            <div class="footer-note">Enterprise Resource Planning System</div>
         </div>
     </div>
-    <footer></footer>
-    <script src="/user_assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/user_assets/js/bs-init.js"></script>
-    <script src="/user_assets/js/startup-modern.js"></script>
-</body>
 
+</div>
+
+<script src="/user_assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
 </html>

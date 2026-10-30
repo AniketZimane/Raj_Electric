@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>View Purchase Order</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap">
+    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
+    <style>
+        body { font-family: 'Nunito', sans-serif; background: #f0f2f8; margin: 0; }
+        #wrapper { display: flex; min-height: 100vh; }
+        #content-wrapper { flex: 1; min-width: 0; overflow-x: hidden; }
+
+        .page-header {
+            background: #fff; border-radius: 16px; padding: 1.25rem 1.75rem;
+            margin-bottom: 1.5rem; box-shadow: 0 1px 6px rgba(0,0,0,.06);
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+        }
+        .page-header h3 { font-weight: 800; color: #0d1b4b; margin: 0; font-size: 1.2rem; }
+
+        .section-card {
+            background: #fff; border-radius: 16px; padding: 1.5rem;
+            box-shadow: 0 1px 6px rgba(0,0,0,.06); margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: .8rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .08em; color: #0d1b4b; margin-bottom: 1.25rem;
+        }
+
+        .meta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .meta-item label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #8a94a6; display: block; margin-bottom: .2rem; }
+        .meta-item span  { font-size: .9rem; font-weight: 700; color: #0d1b4b; }
+
+        .erp-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .erp-table thead th {
+            background: #f0f2f8; color: #0d1b4b; font-size: .7rem;
+            font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+            padding: .7rem 1rem; border: none;
+        }
+        .erp-table thead th:first-child { border-radius: 10px 0 0 10px; }
+        .erp-table thead th:last-child  { border-radius: 0 10px 10px 0; }
+        .erp-table tbody td {
+            padding: .75rem 1rem; font-size: .85rem; color: #374151;
+            border-bottom: 1px solid #f0f2f8; vertical-align: middle;
+        }
+        .erp-table tbody tr:last-child td { border-bottom: none; }
+        .erp-table tfoot td { padding: .75rem 1rem; font-weight: 800; color: #0d1b4b; font-size: .9rem; }
+
+        .status-pill {
+            display: inline-block; padding: 3px 10px; border-radius: 20px;
+            font-size: .7rem; font-weight: 700;
+        }
+        .pill-draft  { background: #fef9c3; color: #854d0e; }
+        .pill-sent   { background: #dbeafe; color: #1e40af; }
+        .pill-ack    { background: #e0e7ff; color: #3730a3; }
+        .pill-done   { background: #dcfce7; color: #166534; }
+        .pill-cancel { background: #fee2e2; color: #991b1b; }
+
+        .btn-erp {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: .4rem 1rem; border-radius: 8px; font-size: .8rem;
+            font-weight: 700; text-decoration: none; border: none; cursor: pointer;
+            transition: opacity .2s;
+        }
+        .btn-erp:hover { opacity: .85; }
+        .btn-back    { background: #f0f2f8; color: #0d1b4b; }
+        .btn-primary-erp { background: #3949ab; color: #fff; }
+    </style>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <div th:replace="~{fragment1 ::adminfragment1}"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <div th:replace="~{fragment2 ::adminfragment2}"></div>
+            <div class="container-fluid px-4 py-3">
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h3 th:text="'Purchase Order — ' + ${po.poNumber}">PO Detail</h3>
+                        <small>View purchase order details and line items</small>
+                    </div>
+                    <a href="/purchase-orders/" class="btn-erp btn-back">← Back to List</a>
+                </div>
+
+                <!-- PO Meta -->
+                <div class="section-card">
+                    <div class="section-title">Order Details</div>
+                    <div class="meta-grid">
+                        <div class="meta-item">
+                            <label>PO Number</label>
+                            <span th:text="${po.poNumber}">—</span>
+                        </div>
+                        <div class="meta-item">
+                            <label>Vendor</label>
+                            <span th:text="${po.vendor != null ? po.vendor.vendorName : '—'}">—</span>
+                        </div>
+                        <div class="meta-item">
+                            <label>Vendor Email</label>
+                            <span th:text="${po.vendor != null ? po.vendor.email : '—'}">—</span>
+                        </div>
+                        <div class="meta-item">
+                            <label>Status</label>
+                            <span>
+                                <span class="status-pill pill-draft"  th:if="${po.status == 'DRAFT'}"        th:text="${po.status}"></span>
+                                <span class="status-pill pill-sent"   th:if="${po.status == 'SENT'}"         th:text="${po.status}"></span>
+                                <span class="status-pill pill-ack"    th:if="${po.status == 'ACKNOWLEDGED'}" th:text="${po.status}"></span>
+                                <span class="status-pill pill-done"   th:if="${po.status == 'COMPLETED'}"    th:text="${po.status}"></span>
+                                <span class="status-pill pill-cancel" th:if="${po.status == 'CANCELLED'}"    th:text="${po.status}"></span>
+                            </span>
+                        </div>
+                        <div class="meta-item">
+                            <label>Created By</label>
+                            <span th:text="${po.createdBy ?: '—'}">—</span>
+                        </div>
+                        <div class="meta-item">
+                            <label>Created On</label>
+                            <span th:text="${po.createdAt != null ? #temporals.format(po.createdAt, 'dd-MM-yyyy HH:mm') : '—'}">—</span>
+                        </div>
+                        <div class="meta-item" th:if="${po.sentAt != null}">
+                            <label>Sent On</label>
+                            <span th:text="${#temporals.format(po.sentAt, 'dd-MM-yyyy HH:mm')}">—</span>
+                        </div>
+                        <div class="meta-item" th:if="${po.notes != null and !po.notes.isEmpty()}">
+                            <label>Notes</label>
+                            <span th:text="${po.notes}">—</span>
+                        </div>
+                    </div>
+
+                    <!-- Update Status -->
+                    <form th:action="@{/purchase-order/status/{id}/(id=${po.id})}" method="post"
+                          style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-top:.5rem;">
+                        <select name="status" style="border:1.5px solid #e4e7ef;border-radius:8px;padding:.4rem .75rem;font-size:.85rem;font-family:'Nunito',sans-serif;">
+                            <option value="DRAFT"        th:selected="${po.status == 'DRAFT'}">Draft</option>
+                            <option value="SENT"         th:selected="${po.status == 'SENT'}">Sent</option>
+                            <option value="ACKNOWLEDGED" th:selected="${po.status == 'ACKNOWLEDGED'}">Acknowledged</option>
+                            <option value="COMPLETED"    th:selected="${po.status == 'COMPLETED'}">Completed</option>
+                            <option value="CANCELLED"    th:selected="${po.status == 'CANCELLED'}">Cancelled</option>
+                        </select>
+                        <button type="submit" class="btn-erp btn-primary-erp">Update Status</button>
+                    </form>
+                </div>
+
+                <!-- Line Items -->
+                <div class="section-card">
+                    <div class="section-title">Line Items</div>
+                    <div class="table-responsive">
+                        <table class="erp-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Rate</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item, i : ${po.items}">
+                                    <td th:text="${i.count}">1</td>
+                                    <td><strong th:text="${item.productName}">—</strong></td>
+                                    <td th:text="${item.quantity}">0</td>
+                                    <td>₹<span th:text="${#numbers.formatDecimal(item.unitRate, 1, 2)}">0.00</span></td>
+                                    <td>₹<span th:text="${#numbers.formatDecimal(item.totalAmount, 1, 2)}">0.00</span></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" style="text-align:right;">Grand Total</td>
+                                    <td>₹<span th:text="${#numbers.formatDecimal(po.totalAmount, 1, 2)}">0.00</span></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <footer class="bg-white sticky-footer mt-auto">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright py-3">
+                    <span class="text-muted" style="font-size:.8rem;">Copyright © ERP System 2026</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+</div>
+<script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assestad/js/theme.js"></script>
+</body>
+</html>

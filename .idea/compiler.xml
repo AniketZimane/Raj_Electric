@@ -9,9 +9,6 @@
         <module name="RajBattery" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="RajBattery" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

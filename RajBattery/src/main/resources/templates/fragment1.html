@@ -2,131 +2,257 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
-    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="/assestad/js/clock.js">
-
+    <title>Sidebar</title>
 </head>
 <body>
 <div th:fragment="adminfragment1">
-  <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
-    <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-      <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
-<!--      <div class="sidebar-brand-text mx-3 text-center">-->
-<!--        &lt;!&ndash; Case: Cname available &ndash;&gt;-->
-<!--        <div th:if="${Cname != null}">-->
-<!--          &lt;!&ndash; First line: take first 8 chars &ndash;&gt;-->
-<!--          <span th:text="${Cname.substring(0, T(java.lang.Math).min(8, Cname.length()))}"></span><br/>-->
-<!--          &lt;!&ndash; Second line: show the rest if exists &ndash;&gt;-->
-<!--          <span th:if="${Cname.length() > 8}" th:text="${Cname.substring(4)}"></span>-->
-<!--        </div>-->
+<style>
+    #sidebar {
+        width: 240px; min-height: 100vh; flex-shrink: 0;
+        background: linear-gradient(180deg, #0d1b4b 0%, #1a2f7a 100%);
+        display: flex; flex-direction: column;
+        transition: width .25s ease;
+        position: relative; z-index: 100;
+        overflow: visible;
+    }
+    #sidebar.collapsed { width: 64px; }
+    .sb-brand {
+        display: flex; align-items: center; gap: .75rem;
+        padding: 1.1rem 1rem 1rem; border-bottom: 1px solid rgba(255,255,255,.1);
+        text-decoration: none; white-space: nowrap; overflow: hidden;
+    }
+    .sb-brand-icon {
+        width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+        background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center;
+    }
+    .sb-brand-text { color: #fff; }
+    .sb-brand-text .name { font-size: .95rem; font-weight: 800; line-height: 1.1; }
+    .sb-brand-text .sub  { font-size: .65rem; opacity: .6; font-weight: 600; letter-spacing: .04em; }
+    #sidebar.collapsed .sb-brand-text { display: none; }
+    .sb-toggle {
+        position: absolute; top: 1.1rem; right: -13px;
+        width: 26px; height: 26px; border-radius: 50%;
+        background: #fff !important; border: 2px solid #e4e7ef !important;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+        transition: transform .25s; padding: 0 !important; line-height: 1;
+    }
+    .sb-toggle svg { transition: transform .25s; display: block; }
+    #sidebar.collapsed .sb-toggle svg { transform: rotate(180deg); }
+    .sb-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: .75rem 0; }
+    .sb-nav::-webkit-scrollbar { width: 4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 4px; }
+    .sb-section-label {
+        font-size: .6rem; font-weight: 800; text-transform: uppercase;
+        letter-spacing: .12em; color: rgba(255,255,255,.4);
+        padding: .9rem 1.1rem .3rem; white-space: nowrap; overflow: hidden;
+    }
+    #sidebar.collapsed .sb-section-label { opacity: 0; height: 0; padding: 0; }
+    .sb-item {
+        display: flex; align-items: center; gap: .75rem;
+        padding: .55rem 1rem; color: rgba(255,255,255,.75);
+        text-decoration: none; font-size: .82rem; font-weight: 600;
+        border-radius: 10px; margin: 1px .5rem;
+        transition: background .18s, color .18s; white-space: nowrap; overflow: hidden;
+        cursor: pointer; border: none !important; background: transparent !important;
+        box-shadow: none !important; outline: none !important;
+        width: calc(100% - 1rem); text-align: left;
+    }
+    .sb-item:hover, .sb-item.active { background: rgba(255,255,255,.13) !important; color: #fff; }
+    .sb-item svg { flex-shrink: 0; }
+    .sb-item .sb-label { overflow: hidden; }
+    #sidebar.collapsed .sb-item .sb-label { display: none; }
+    #sidebar.collapsed .sb-item { justify-content: center; margin: 1px .25rem; width: calc(100% - .5rem); }
+    .sb-sub { overflow: hidden; max-height: 0; transition: max-height .25s ease; }
+    .sb-sub.open { max-height: 400px; }
+    .sb-sub-item {
+        display: flex; align-items: center; gap: .6rem;
+        padding: .45rem 1rem .45rem 2.75rem;
+        color: rgba(255,255,255,.6); text-decoration: none;
+        font-size: .78rem; font-weight: 600; border-radius: 8px;
+        margin: 1px .5rem; transition: background .15s, color .15s;
+        white-space: nowrap; overflow: hidden;
+    }
+    .sb-sub-item:hover { background: rgba(255,255,255,.1); color: #fff; }
+    #sidebar.collapsed .sb-sub { display: none; }
+    .sb-chevron { margin-left: auto; flex-shrink: 0; transition: transform .25s; }
+    .sb-item[aria-expanded="true"] .sb-chevron { transform: rotate(90deg); }
+    #sidebar.collapsed .sb-chevron { display: none; }
+    .sb-divider { border-top: 1px solid rgba(255,255,255,.08); margin: .5rem .75rem; }
+    .sb-footer { padding: .75rem .5rem; border-top: 1px solid rgba(255,255,255,.1); }
+</style>
+<nav id="sidebar">
 
-<!--        &lt;!&ndash; Case: Cname missing &ndash;&gt;-->
-<!--        <div th:if="${Cname == null}">-->
-<!--          <span>Welcome</span>-->
-<!--        </div>-->
-<!--      </div>-->
+    <button class="sb-toggle" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle sidebar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#0d1b4b">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+    </button>
 
-      <div class="sidebar-brand-text mx-3 text-center">
-        <!-- Case: Cname available -->
-        <div class="mt-4">
-          <span>Guru</span><br/>
-          <span>Hardware</span><br/>
-          <span>&</span><br/>
-          <span>Traders</span><br/>
+    <a class="sb-brand" href="/admin/dashboard/">
+        <div class="sb-brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
         </div>
-
-        <!-- Case: Cname missing -->
-        <div th:if="${Cname == null}">
-          <span>Welcome</span>
+        <div class="sb-brand-text">
+            <div class="name" th:text="${Cname != null ? Cname : 'ERP System'}">ERP System</div>
+            <div class="sub">Admin Panel</div>
         </div>
-      </div>
-
-
     </a>
-      <hr class="sidebar-divider my-0">
-      <ul class="navbar-nav text-light" id="accordionSidebar">
-        <li class="nav-item">
-          <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
-            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#" style="height: 20px;">
-              <div class="sidebar-brand-icon rotate-n-15"></div>
-              <div class="sidebar-brand-text mx-3"></div>
+
+    <div class="sb-nav">
+
+        <a class="sb-item" href="/admin/dashboard/">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+            </svg>
+            <span class="sb-label">Dashboard</span>
+        </a>
+
+        <div class="sb-divider"></div>
+        <div class="sb-section-label">Operations</div>
+
+        <a class="sb-item" href="/admin/inhouse/invoice/">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+            <span class="sb-label">New Invoice</span>
+        </a>
+
+        <a class="sb-item" href="/admin/product/stock/">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.53 15.47 0 12.36 0c-1.73 0-3.24.86-4.19 2.18L12 6H20zm-8.55 0l-3.5-4.9C7.53 1.07 6.76 1 6 1 2.69 1 0 3.69 0 7v1h12.45L11.45 6zM0 9v11c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V9H0z"/>
+            </svg>
+            <span class="sb-label">Update Stock</span>
+        </a>
+
+        <button class="sb-item" onclick="toggleSub('sub-po', this)" aria-expanded="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            <span class="sb-label">Purchase Orders</span>
+            <svg class="sb-chevron" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+        </button>
+        <div class="sb-sub" id="sub-po">
+            <a class="sb-sub-item" href="/purchase-orders/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+                All Orders
             </a>
-              <hr class="sidebar-divider my-0">
-              <ul class="navbar-nav text-light" id="accordionSidebar-1">
-                <li class="nav-item"><a class="nav-link active" href="/admin/dashboard/"><i class="fas fa-home"></i><span>&nbsp;Home</span></a></li>
-                <hr class="sidebar-divider">
-                <div class="sidebar-heading">
-                  <p class="mb-0">INTERFACE</p>
-                </div>
-                <li class="nav-item">
-                  <div><a class="btn btn-link nav-link" data-bs-toggle="collapse" aria-expanded="true" aria-controls="collapse-1" href="#collapse-1" role="button"><i class="fas fa-cog"></i>&nbsp;<span>Components</span></a>
-                    <div class="collapse show" id="collapse-1">
-                      <div class="bg-white border rounded py-2 collapse-inner">
-                        <h6 class="collapse-header">Our seervices:</h6><a class="collapse-item" href="/new/Product/">Upload New Product&nbsp;</a>
-                        <a class="collapse-item" href="/admin/inhouse/invoice/">Inhouse Invoice</a>
-<!--                        <a class="collapse-item" disabled="disabled" href="/admin/black-inhouse/invoice/">Inhouse Invoice<br> without gst</a>-->
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li class="nav-item">
-                  <div><a class="btn btn-link nav-link" data-bs-toggle="collapse" aria-expanded="true" aria-controls="collapse-2" href="#collapse-2" role="button"><i class="fas fa-wrench"></i>&nbsp;<span>Utilities</span></a>
-                    <div class="collapse show" id="collapse-2">
-                      <div class="bg-white border rounded py-2 collapse-inner">
-                        <h6 class="collapse-header">CUSTOM UTILITIES:</h6>
-                        <a class="collapse-item" href="/admin/product/stock/">Update Product Stock</a>
-<!--                        <a class="collapse-item"  href="/admin/product/black/stock/">Update Secondary <br>Product Stock</a>-->
-<!--                        <a class="collapse-item" href="/admin/update/offer/">Set offer</a>-->
-                        <a class="collapse-item" href="/admin/create/category/">Create Product Category</a>
-                        <a class="collapse-item" href="/company/">Update Company Details</a>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <hr class="sidebar-divider">
-                <div class="sidebar-heading">
-                  <p class="mb-0">Addons</p>
-                </div>
-                <li class="nav-item">
-                  <div><a class="btn btn-link nav-link" data-bs-toggle="collapse" aria-expanded="true" aria-controls="collapse-3" href="#collapse-3" role="button"><i class="fas fa-folder"></i>&nbsp;<span>Pages</span></a>
-                    <div class="collapse show" id="collapse-3">
-                      <div class="bg-white border rounded py-2 collapse-inner">
-                        <h6 class="collapse-header">LOGIN SCREENS:</h6><a class="collapse-item" href="/login">Login</a><a class="collapse-item" href="/signup/">Register</a><a class="collapse-item" href="/admin/forgotpasswordpage/">Forgot Password</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="collapsePages" class="collapse" aria-labelledby="headingTwo" aria-controls="collapsePages" data-bs-parent="#accordionSidebar">
-                    <div class="bg-white border rounded py-2 collapse-inner">
-                      <h6 class="collapse-header">LOGIN SCREENS:</h6><a class="collapse-item" href="/admin/login/">Login</a><a class="collapse-item" href="#">Register</a><a class="collapse-item" href="/admin/forgotpasswordpage/">Forgot Password</a>
-<!--                      <h6 class="collapse-header">OTHER PAGES:</h6><a class="collapse-item" href="#">404 Page</a><a class="collapse-item" href="#">Blank Page</a>-->
-                    </div>
-                  </div>
-                </li>
-                <li class="nav-item"></li>
-                <li class="nav-item"><a class="nav-link" href="/Product/report/"><i class="fas fa-table"></i><span>&nbsp;Product Report</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="/Product/stock/report/"><i class="fas fa-table"></i><span>Product Stock Report</span></a></li>
-<!--                <li class="nav-item"><a class="nav-link" href="/admin/onlineSell/report/"><i class="fas fa-table"></i><span>&nbsp;Online Sell Product Dashboard</span></a></li>-->
-                <li class="nav-item"><a class="nav-link" href="/admin/inhouseInvoice/report/"><i class="fas fa-table"></i><span>&nbsp; Inhouse Sell Product Dashboard</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/Incomplete/report/"><i class="fas fa-table"></i><span>&nbsp; Incomplete Invoice Report</span></a></li> 
-                <li class="nav-item"><a class="nav-link" href="/admin/companyDetails/report/"><i class="fas fa-table"></i><span>&nbsp; Company Details</span></a></li>
-<!--                <li class="nav-item"><a class="nav-link" href="/admin/old-battery/report/"><i class="fas fa-table"></i><span>Old Battery Report</span></a></li>-->
-<!--                <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-table"></i><span>&nbsp; Student Result Record</span></a></li>-->
-                <hr class="sidebar-divider">
-              </ul>
-              <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle-1" type="button"></button></div>
-            </div>
-          </nav><a class="nav-link active" href="/logout"><i class="fas fa-lock"></i><span>Logout</span></a>
-        </li>
-<!--        <li class="nav-item"><a class="nav-link" href="404.html"><i class="fas fa-exclamation-circle"></i><span>Page Not Found</span></a></li>-->
-      </ul>
-<!--      <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle"  type="button"></button></div>-->
+            <a class="sb-sub-item" href="/purchase-order/new/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                New Order
+            </a>
+            <a class="sb-sub-item" href="/vendor/list/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                Vendors
+            </a>
+        </div>
+
+        <div class="sb-divider"></div>
+        <div class="sb-section-label">Reports</div>
+
+        <button class="sb-item" onclick="toggleSub('sub-reports', this)" aria-expanded="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.1h-15V5h15v14.1zm0-16.1h-15c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+            </svg>
+            <span class="sb-label">Reports</span>
+            <svg class="sb-chevron" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+        </button>
+        <div class="sb-sub" id="sub-reports">
+            <a class="sb-sub-item" href="/admin/inhouseInvoice/report/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                Sales Report
+            </a>
+            <a class="sb-sub-item" href="/Product/report/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5S16.12 15 17.5 15s2.5 1.12 2.5 2.5S18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg>
+                Product Report
+            </a>
+            <a class="sb-sub-item" href="/admin/Incomplete/report/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                Pending Bills
+            </a>
+            <a class="sb-sub-item" href="/admin/companyDetails/report/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+                Company Details
+            </a>
+        </div>
+
+        <div class="sb-divider"></div>
+        <div class="sb-section-label">Settings</div>
+
+        <button class="sb-item" onclick="toggleSub('sub-utils', this)" aria-expanded="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+            </svg>
+            <span class="sb-label">Settings</span>
+            <svg class="sb-chevron" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+        </button>
+        <div class="sb-sub" id="sub-utils">
+            <a class="sb-sub-item" href="/new/Product/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                Add Product
+            </a>
+            <a class="sb-sub-item" href="/admin/create/category/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5S16.12 15 17.5 15s2.5 1.12 2.5 2.5S18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg>
+                Categories
+            </a>
+            <a class="sb-sub-item" href="/company/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+                Company Info
+            </a>
+        </div>
+
     </div>
-  </nav>
+
+    <div class="sb-footer">
+        <a class="sb-item" href="/logout" style="color:rgba(255,100,100,.85);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+            </svg>
+            <span class="sb-label">Logout</span>
+        </a>
+    </div>
+
+</nav>
+
+<script>
+    function toggleSidebar() {
+        const sb = document.getElementById('sidebar');
+        sb.classList.toggle('collapsed');
+        localStorage.setItem('sidebarCollapsed', sb.classList.contains('collapsed'));
+    }
+
+    function toggleSub(id, btn) {
+        const sub = document.getElementById(id);
+        const isOpen = sub.classList.contains('open');
+        document.querySelectorAll('.sb-sub.open').forEach(s => s.classList.remove('open'));
+        document.querySelectorAll('.sb-item[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded','false'));
+        if (!isOpen) {
+            sub.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+        }
+    }
+
+    (function() {
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            document.getElementById('sidebar').classList.add('collapsed');
+        }
+    })();
+
+    (function() {
+        const path = window.location.pathname;
+        document.querySelectorAll('.sb-item[href], .sb-sub-item[href]').forEach(a => {
+            if (a.getAttribute('href') === path) a.classList.add('active');
+        });
+    })();
+</script>
 </div>
 </body>
-<script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
-<script src="/assestad/js/theme.js"></script>
 </html>

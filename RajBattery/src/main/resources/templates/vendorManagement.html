@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Vendor Management</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap">
+    <style>
+        body { font-family: 'Nunito', sans-serif; background: #f0f2f8; margin: 0; }
+        #wrapper { display: flex; min-height: 100vh; }
+        #content-wrapper { flex: 1; min-width: 0; overflow-x: hidden; }
+
+        .page-header {
+            background: #fff; border-radius: 16px; padding: 1.25rem 1.75rem;
+            margin-bottom: 1.5rem; box-shadow: 0 1px 6px rgba(0,0,0,.06);
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+        }
+        .page-header h3 { font-weight: 800; color: #0d1b4b; margin: 0; font-size: 1.2rem; }
+
+        .section-card {
+            background: #fff; border-radius: 16px; padding: 1.5rem;
+            box-shadow: 0 1px 6px rgba(0,0,0,.06); margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: .8rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .08em; color: #0d1b4b; margin-bottom: 1.25rem;
+            display: flex; align-items: center; gap: .5rem;
+        }
+
+        .form-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #8a94a6; }
+        .form-control, .form-select {
+            border: 1.5px solid #e4e7ef; border-radius: 8px;
+            font-family: 'Nunito', sans-serif; font-size: .88rem; color: #0d1b4b;
+        }
+        .form-control:focus, .form-select:focus { border-color: #3949ab; box-shadow: 0 0 0 3px rgba(57,73,171,.12); }
+
+        .erp-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .erp-table thead th {
+            background: #f0f2f8; color: #0d1b4b; font-size: .7rem;
+            font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+            padding: .7rem 1rem; border: none;
+        }
+        .erp-table thead th:first-child { border-radius: 10px 0 0 10px; }
+        .erp-table thead th:last-child  { border-radius: 0 10px 10px 0; }
+        .erp-table tbody td {
+            padding: .75rem 1rem; font-size: .85rem; color: #374151;
+            border-bottom: 1px solid #f0f2f8; vertical-align: middle;
+        }
+        .erp-table tbody tr:last-child td { border-bottom: none; }
+        .erp-table tbody tr:hover td { background: #f8faff; }
+
+        .status-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 700; }
+        .pill-active   { background: #dcfce7; color: #166534; }
+        .pill-inactive { background: #fee2e2; color: #991b1b; }
+
+        .btn-erp {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: .4rem 1rem; border-radius: 8px; font-size: .8rem;
+            font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: opacity .2s;
+        }
+        .btn-erp:hover { opacity: .85; }
+        .btn-primary-erp { background: #3949ab; color: #fff; }
+        .btn-danger-erp  { background: #fee2e2; color: #991b1b; }
+
+        .alert { border-radius: 10px; font-size: .85rem; padding: .75rem 1rem; margin-bottom: 1rem; }
+        .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+        .alert-danger  { background: #fff5f5; border: 1px solid #fecaca; color: #b91c1c; }
+
+        .empty-state { text-align: center; padding: 2.5rem 1rem; color: #8a94a6; font-size: .9rem; }
+    </style>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <div th:replace="~{fragment1 ::adminfragment1}"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <div th:replace="~{fragment2 ::adminfragment2}"></div>
+            <div class="container-fluid px-4 py-3">
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h3>Vendor Management</h3>
+                        <small>Add and manage your suppliers and vendors</small>
+                    </div>
+                </div>
+
+                <div th:if="${msg}"  class="alert alert-success" th:text="${msg}"></div>
+                <div th:if="${emsg}" class="alert alert-danger"  th:text="${emsg}"></div>
+
+                <!-- Add Vendor Form -->
+                <div class="section-card">
+                    <div class="section-title">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#0d1b4b"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        Add New Vendor
+                    </div>
+                    <form action="/vendor/save/" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Vendor Name *</label>
+                                <input type="text" name="vendorName" class="form-control" placeholder="e.g. Raj Traders" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Email *</label>
+                                <input type="email" name="email" class="form-control" placeholder="vendor@example.com" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control" placeholder="+91 98765 43210">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Contact Person</label>
+                                <input type="text" name="contactPerson" class="form-control" placeholder="Name of contact">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">GST Number</label>
+                                <input type="text" name="gstNumber" class="form-control" placeholder="22AAAAA0000A1Z5">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Address</label>
+                                <input type="text" name="address" class="form-control" placeholder="Street, City">
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn-erp btn-primary-erp">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                    Save Vendor
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Vendor List -->
+                <div class="section-card">
+                    <div class="section-title">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#0d1b4b"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        All Vendors
+                        <span style="margin-left:auto;font-size:.75rem;color:#8a94a6;font-weight:600;" th:text="${#lists.size(vendors)} + ' vendors'">0 vendors</span>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(vendors)}" class="empty-state">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        <div>No vendors yet. Add your first vendor above.</div>
+                    </div>
+
+                    <div th:if="${!#lists.isEmpty(vendors)}" class="table-responsive">
+                        <table class="erp-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Vendor Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Contact Person</th>
+                                    <th>GST Number</th>
+                                    <th>Status</th>
+                                    <th>Added On</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="v, i : ${vendors}">
+                                    <td th:text="${i.count}">1</td>
+                                    <td><strong th:text="${v.vendorName}">—</strong></td>
+                                    <td th:text="${v.email}">—</td>
+                                    <td th:text="${v.phone != null ? v.phone : '—'}">—</td>
+                                    <td th:text="${v.contactPerson != null ? v.contactPerson : '—'}">—</td>
+                                    <td th:text="${v.gstNumber != null ? v.gstNumber : '—'}">—</td>
+                                    <td>
+                                        <span class="status-pill pill-active"   th:if="${v.active}">Active</span>
+                                        <span class="status-pill pill-inactive" th:if="${!v.active}">Inactive</span>
+                                    </td>
+                                    <td th:text="${v.createdAt != null ? #temporals.format(v.createdAt, 'dd-MM-yyyy') : '—'}">—</td>
+                                    <td>
+                                        <a th:if="${v.active}" th:href="@{/vendor/deactivate/{id}/(id=${v.id})}"
+                                           class="btn-erp btn-danger-erp"
+                                           onclick="return confirm('Deactivate this vendor?')"
+                                           style="padding:.3rem .75rem;">
+                                            Deactivate
+                                        </a>
+                                        <span th:if="${!v.active}" style="color:#8a94a6;font-size:.8rem;">—</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <footer class="bg-white sticky-footer mt-auto">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright py-3">
+                    <span class="text-muted" style="font-size:.8rem;">Copyright © ERP System 2026</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assestad/js/theme.js"></script>
+</body>
+</html>

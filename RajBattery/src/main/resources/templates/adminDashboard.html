@@ -1,215 +1,304 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
-    <title>Dashboard - Brand</title>
-    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap"
-    />
-    <link rel="stylesheet" href="/assestad/fonts/fontawesome-all.min.css" />
-    <script src="/assestad/js/clock.js"></script>
-  </head>
-
-  <body id="page-top">
-    <div id="wrapper">
-<!--       th:replace="~{userFragment.html ::userFragment1}" -->
-      <div th:replace="~{fragment1 ::adminfragment1}"></div>
-      <div class="d-flex flex-column" id="content-wrapper">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+    <title th:text="${Cname != null ? Cname + ' — Dashboard' : 'ERP Dashboard'}">ERP Dashboard</title>
+    <link rel="stylesheet" href="/assestad/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap"/>
+</head>
+<body id="page-top">
+<style>
+    html, body { height: 100%; margin: 0; overflow: hidden; font-family: 'Nunito', sans-serif; background: #f0f2f8; }
+    #wrapper { display: flex; height: 100vh; overflow: hidden; }
+    #sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
+    #content-wrapper { flex: 1; min-width: 0; height: 100vh; overflow-y: auto; overflow-x: hidden; }
+    .page-header {
+        background: #fff; border-radius: 16px; padding: 1.25rem 1.75rem;
+        margin-bottom: 1.5rem; box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+        display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+    }
+    .page-header h3 { font-weight: 800; color: #0d1b4b; margin: 0; font-size: 1.3rem; }
+    .page-header small { color: #8a94a6; font-size: 0.8rem; }
+    .erp-badge {
+        background: linear-gradient(135deg, #0d1b4b, #3949ab);
+        color: #fff; padding: 0.35rem 1rem; border-radius: 20px;
+        font-size: 0.75rem; font-weight: 700; letter-spacing: .5px;
+    }
+    .stat-card {
+        border: none; border-radius: 16px; padding: 1.4rem 1.5rem;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        transition: transform .2s, box-shadow .2s;
+        position: relative; overflow: hidden; color: #fff;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.13); }
+    .stat-card.blue   { background: linear-gradient(135deg, #0d1b4b, #3949ab); }
+    .stat-card.green  { background: linear-gradient(135deg, #14532d, #16a34a); }
+    .stat-card.orange { background: linear-gradient(135deg, #92400e, #d97706); }
+    .stat-card.red    { background: linear-gradient(135deg, #7f1d1d, #dc2626); }
+    .stat-card.purple { background: linear-gradient(135deg, #3b0764, #7c3aed); }
+    .stat-card.teal   { background: linear-gradient(135deg, #134e4a, #0d9488); }
+    .stat-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; opacity: .8; margin-bottom: .4rem; }
+    .stat-value { font-size: 1.9rem; font-weight: 800; line-height: 1.1; margin-bottom: .2rem; }
+    .stat-sub   { font-size: 0.75rem; opacity: .75; }
+    .stat-svg   { position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%); opacity: .18; }
+    .section-card {
+        background: #fff; border-radius: 16px; padding: 1.5rem;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.06); margin-bottom: 1.5rem;
+    }
+    .section-title {
+        font-size: 0.85rem; font-weight: 800; text-transform: uppercase;
+        letter-spacing: .08em; color: #0d1b4b; margin-bottom: 1.25rem;
+        display: flex; align-items: center; gap: .5rem;
+    }
+    .section-title svg { opacity: .6; }
+    .action-btn {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 1.1rem .5rem; border-radius: 14px; text-decoration: none; color: #1e293b;
+        background: #f8faff; border: 1.5px solid #e4e7ef;
+        transition: all .2s; font-size: 0.78rem; font-weight: 700; gap: .6rem; text-align: center;
+    }
+    .action-btn:hover { background: #eef0fb; border-color: #3949ab; color: #0d1b4b; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(57,73,171,.15); }
+    .action-btn svg { transition: transform .2s; }
+    .action-btn:hover svg { transform: scale(1.1); }
+    .erp-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .erp-table thead th {
+        background: #f0f2f8; color: #0d1b4b; font-size: 0.72rem;
+        font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+        padding: .75rem 1rem; border: none;
+    }
+    .erp-table thead th:first-child { border-radius: 10px 0 0 10px; }
+    .erp-table thead th:last-child  { border-radius: 0 10px 10px 0; }
+    .erp-table tbody tr:hover td { background: #f8faff; }
+    .erp-table tbody td {
+        padding: .75rem 1rem; font-size: 0.85rem; color: #374151;
+        border-bottom: 1px solid #f0f2f8; vertical-align: middle;
+    }
+    .erp-table tbody tr:last-child td { border-bottom: none; }
+    .status-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: .04em; }
+    .pill-draft  { background: #fef9c3; color: #854d0e; }
+    .pill-sent   { background: #dbeafe; color: #1e40af; }
+    .pill-done   { background: #dcfce7; color: #166534; }
+    .pill-cancel { background: #fee2e2; color: #991b1b; }
+</style>
+<div id="wrapper">
+    <div th:replace="~{fragment1 ::adminfragment1}"></div>
+    <div class="d-flex flex-column" id="content-wrapper">
         <div id="content">
-          <div th:replace="~{fragment2 ::adminfragment2}"></div>
-          <div class="container-fluid">
-            <div
-              class="d-sm-flex justify-content-between align-items-center mb-4"
-            >
-              <h3 class="text-dark mb-0" th:text="${Cname != null && !Cname.isEmpty() ? Cname + ' Dashboard' : 'Welcome Dashboard'}">Dashboard</h3>
+            <div th:replace="~{fragment2 ::adminfragment2}"></div>
+            <div class="container-fluid px-4 py-3">
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h3 th:text="${Cname != null && !Cname.isEmpty() ? Cname + ' — Dashboard' : 'Dashboard'}">Dashboard</h3>
+                        <small>Enterprise Resource Planning System</small>
+                    </div>
+                    <span class="erp-badge">ERP v3.0</span>
+                </div>
+
+                <!-- Stat Cards -->
+                <div class="row g-3 mb-3">
+
+                    <!-- Online Customers -->
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="stat-card blue">
+                            <div class="stat-label">Online Customers</div>
+                            <div class="stat-value" th:text="${onlineCustomer}">0</div>
+                            <div class="stat-sub">Registered users</div>
+                            <svg class="stat-svg" width="64" height="64" viewBox="0 0 24 24" fill="white">
+                                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Total Revenue -->
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="stat-card green">
+                            <div class="stat-label">Total Revenue</div>
+                            <div class="stat-value">₹<span th:text="${totalNetAmt}">0</span></div>
+                            <div class="stat-sub">Inhouse invoices</div>
+                            <svg class="stat-svg" width="64" height="64" viewBox="0 0 24 24" fill="white">
+                                <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Pending Amount -->
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="stat-card orange">
+                            <div class="stat-label">Pending Amount</div>
+                            <div class="stat-value">₹<span th:text="${remainingAmt}">0</span></div>
+                            <div class="stat-sub">Due from customers</div>
+                            <svg class="stat-svg" width="64" height="64" viewBox="0 0 24 24" fill="white">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Total Products -->
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="stat-card red">
+                            <div class="stat-label">Total Products</div>
+                            <div class="stat-value" th:text="${totalProduct}">0</div>
+                            <div class="stat-sub">In catalogue</div>
+                            <svg class="stat-svg" width="64" height="64" viewBox="0 0 24 24" fill="white">
+                                <path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.53 15.47 0 12.36 0c-1.73 0-3.24.86-4.19 2.18L12 6H20zm-8.55 0l-3.5-4.9C7.53 1.07 6.76 1 6 1 2.69 1 0 3.69 0 7v1h12.45L11.45 6zM0 9v11c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V9H0z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Purchase Orders -->
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="stat-card purple">
+                            <div class="stat-label">Purchase Orders</div>
+                            <div class="stat-value" th:text="${totalPO}">0</div>
+                            <div class="stat-sub"><span th:text="${pendingPO}">0</span> pending</div>
+                            <svg class="stat-svg" width="64" height="64" viewBox="0 0 24 24" fill="white">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Stock Ledger -->
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="stat-card teal">
+                            <div class="stat-label">Stock Ledger</div>
+                            <div class="stat-value">Live</div>
+                            <div class="stat-sub">Auditable transactions</div>
+                            <svg class="stat-svg" width="64" height="64" viewBox="0 0 24 24" fill="white">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="section-card">
+                    <div class="section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#0d1b4b"><path d="M13 3L4 14h7l-2 7 9-11h-7z"/></svg>
+                        Quick Actions
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <a href="/admin/inhouse/invoice/" class="action-btn">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="#3949ab"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                                New Invoice
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <a href="/admin/product/stock/" class="action-btn">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="#16a34a"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.53 15.47 0 12.36 0c-1.73 0-3.24.86-4.19 2.18L12 6H20zm-8.55 0l-3.5-4.9C7.53 1.07 6.76 1 6 1 2.69 1 0 3.69 0 7v1h12.45L11.45 6zM0 9v11c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V9H0z"/></svg>
+                                Add Stock
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <a href="/admin/inhouseInvoice/report/" class="action-btn">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="#d97706"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+                                Sales Report
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <a href="/purchase-orders/" class="action-btn">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="#7c3aed"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                                Purchase Order
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <a href="/Product/report/" class="action-btn">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="#0d9488"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5S16.12 15 17.5 15s2.5 1.12 2.5 2.5S18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg>
+                                Products
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <a href="/admin/Incomplete/report/" class="action-btn">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="#dc2626"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                Pending Bills
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Table -->
+                <div class="section-card">
+                    <div class="section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#0d1b4b"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        Business Summary
+                    </div>
+                    <div class="table-responsive">
+                        <table class="erp-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Total Revenue</strong></td>
+                                    <td>₹<span th:text="${totalNetAmt}">0</span></td>
+                                    <td><span class="status-pill pill-done">Collected</span></td>
+                                    <td><a href="/admin/inhouseInvoice/report/" style="color:#3949ab;font-weight:700;font-size:0.8rem;">View Report →</a></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pending Dues</strong></td>
+                                    <td>₹<span th:text="${remainingAmt}">0</span></td>
+                                    <td><span class="status-pill pill-draft">Outstanding</span></td>
+                                    <td><a href="/admin/Incomplete/report/" style="color:#3949ab;font-weight:700;font-size:0.8rem;">View Dues →</a></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Registered Users</strong></td>
+                                    <td th:text="${onlineCustomer}">0</td>
+                                    <td><span class="status-pill pill-done">Active</span></td>
+                                    <td><span style="color:#8a94a6;font-size:0.8rem;">—</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Products in Catalogue</strong></td>
+                                    <td th:text="${totalProduct}">0</td>
+                                    <td><span class="status-pill pill-sent">Listed</span></td>
+                                    <td><a href="/Product/report/" style="color:#3949ab;font-weight:700;font-size:0.8rem;">View Products →</a></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Purchase Orders</strong></td>
+                                    <td th:text="${totalPO}">0</td>
+                                    <td>
+                                        <span class="status-pill pill-draft" th:if="${pendingPO > 0}" th:text="${pendingPO} + ' Pending'">Pending</span>
+                                        <span class="status-pill pill-done" th:if="${pendingPO == 0}">All Clear</span>
+                                    </td>
+                                    <td><a href="/purchase-orders/" style="color:#3949ab;font-weight:700;font-size:0.8rem;">Manage POs →</a></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Stock Ledger</strong></td>
+                                    <td>Auditable</td>
+                                    <td><span class="status-pill pill-done">Live</span></td>
+                                    <td><a href="/Product/stock/report/" style="color:#3949ab;font-weight:700;font-size:0.8rem;">View Ledger →</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
-            <div class="row">
-              <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-start-primary py-2">
-                  <div
-                    class="card-body"
-
-                  >
-                    <div class="row align-items-center no-gutters">
-                      <div class="col me-2">
-                        <div
-                          class="text-uppercase text-primary fw-bold text-xs mb-1"
-                        >
-                          <span>Online Customer</span>
-                        </div>
-                        <div
-                          class="text-dark fw-bold h5 mb-0"
-
-                        >
-                          <span th:text="${onlineCustomer}">$40,000</span>
-                        </div>
-                      </div>
-                      <div class="col-auto">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="1em"
-                          height="1em"
-                          fill="currentColor"
-                          viewBox="0 0 16 16"
-                          class="bi bi-people-fill fa-2x text-gray-300"
-                          style="color: var(--bs-blue)"
-                        >
-                          <path
-                            d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
-                          ></path>
-                          <path
-                            fill-rule="evenodd"
-                            d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"
-                          ></path>
-                          <path
-                            d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"
-                          ></path>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-start-primary py-2">
-                  <div class="card-body">
-                    <div class="row align-items-center no-gutters">
-                      <div class="col me-2">
-                        <div
-                          class="text-uppercase text-primary fw-bold text-xs mb-1"
-                        >
-                          <span>
-                              InHouse Revenue
-                            </span>
-                        </div>
-                        <div
-                          class="text-dark fw-bold h5 mb-0"
-                        >
-                          <span th:text="${totalNetAmt}">$40,000</span>
-                        </div>
-                      </div>
-                      <div class="col-auto">
-                        <i class="fas fa-file-invoice fa-2x text-gray-300"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-start-primary py-2">
-                  <div class="card-body">
-                    <div class="row align-items-center no-gutters">
-                      <div class="col me-2">
-                        <div
-                          class="text-uppercase text-primary fw-bold text-xs mb-1"
-                        >
-                          Pending Amount
-
-                        </div>
-                        <div
-                          class="text-dark fw-bold h5 mb-0"
-                        >
-                          <span th:text="${remainingAmt}">$40,000</span>
-                        </div>
-                      </div>
-                      <div class="col-auto">
-                        <i
-                          class="fas fa-file-signature fa-2x text-gray-300"
-                        ></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-<!--              <div class="col-md-6 col-xl-3 mb-4">-->
-<!--                <div class="card shadow border-start-primary py-2">-->
-<!--                  <div class="card-body">-->
-<!--                    <div class="row align-items-center no-gutters">-->
-<!--                      <div class="col me-2">-->
-<!--                        <div-->
-<!--                          class="text-uppercase text-primary fw-bold text-xs mb-1"-->
-<!--                        >-->
-<!--                          <span>Feedback record</span>-->
-<!--                        </div>-->
-<!--                        <div class="text-dark fw-bold h5 mb-0">-->
-<!--                          <span>0</span>-->
-<!--                        </div>-->
-<!--                      </div>-->
-<!--                      <div class="col-auto">-->
-<!--                        <i class="fas fa-newspaper fa-2x text-gray-300"></i>-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-              <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-start-primary py-2">
-                  <div class="card-body">
-                    <div class="row align-items-center no-gutters">
-                      <div class="col me-2">
-                        <div
-                          class="text-uppercase text-primary fw-bold text-xs mb-1"
-                        >
-                          <span>Total Products</span>
-                        </div>
-                        <div
-                          class="text-dark fw-bold h5 mb-0"
-                        >
-                          <span th:text="${totalProduct}">$40,000</span>
-                        </div>
-                      </div>
-                      <div class="col-auto">
-                        <i class="fas fa-id-card fa-2x text-gray-300"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-<!--              <div class="col-md-6 col-xl-3 mb-4">-->
-<!--                <div class="card shadow border-start-primary py-2">-->
-<!--                  <div class="card-body">-->
-<!--                    <div class="row align-items-center no-gutters">-->
-<!--                      <div class="col me-2">-->
-<!--                        <div-->
-<!--                          class="text-uppercase text-primary fw-bold text-xs mb-1"-->
-<!--                        >-->
-<!--                          <span>Uploaded Offer Banner</span>-->
-<!--                        </div>-->
-<!--                        <div-->
-<!--                          class="text-dark fw-bold h5 mb-0"-->
-<!--                        >-->
-<!--                          <span>2</span>-->
-<!--                        </div>-->
-<!--                      </div>-->
-<!--                      <div class="col-auto">-->
-<!--                        <i class="fas fa-sign-out-alt fa-2x text-gray-300"></i>-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-            </div>
-          </div>
         </div>
-        <footer class="bg-white sticky-footer">
-          <div class="container my-auto">
-            <div class="text-center my-auto copyright">
-              <span>Copyright © Guru Hardware and Traders 2025</span>
+        <footer class="bg-white sticky-footer mt-auto">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright py-3">
+                    <span class="text-muted" style="font-size:0.8rem;">
+                        Copyright ©
+                        <span th:text="${Cname != null ? Cname : 'ERP System'}">ERP System</span>
+                        2026 · Enterprise Resource Planning
+                    </span>
+                </div>
             </div>
-          </div>
         </footer>
-      </div>
-      <a class="border rounded d-inline scroll-to-top" href="#page-top"
-        ><i class="fas fa-angle-up"></i
-      ></a>
     </div>
-    <script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/assestad/js/theme.js"></script>
-  </body>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#3949ab"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+    </a>
+</div>
+<script src="/assestad/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assestad/js/theme.js"></script>
+</body>
 </html>

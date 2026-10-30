@@ -20,7 +20,6 @@ public class CustomUserDetailService implements UserDetailsService {
     private final RegistrationRepo registrationRepo;
     private final HttpSession session;
 
-    // ✅ Constructor injection for both dependencies
     public CustomUserDetailService(RegistrationRepo registrationRepo, HttpSession session) {
         this.registrationRepo = registrationRepo;
         this.session = session;
@@ -28,29 +27,29 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println("Login attempt with email: " + email);
-
         Registration user = registrationRepo.getByEmail(email);
 
         if (user == null) {
-            throw new UsernameNotFoundException("Invalid User: " + email);
+            throw new UsernameNotFoundException("Invalid credentials.");
         }
 
-        // ✅ Only set session after confirming user exists
+        // Block PENDING and REJECTED users from logging in
+        if ("PENDING".equals(user.getStatus())) {
+            throw new UsernameNotFoundException("Your registration is pending IT approval.");
+        }
+        if ("REJECTED".equals(user.getStatus())) {
+            throw new UsernameNotFoundException("Your registration has been rejected. Contact IT support.");
+        }
+
         session.setAttribute("key", user.getUsername());
-        System.out.println("Loaded user: " + user.getUsername());
 
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        if ("1".equals(user.getUserType())) {
-            System.out.println("Assigning ROLE_ADMIN");
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        } else if ("0".equals(user.getUserType())) {
-            System.out.println("Assigning ROLE_USER");
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        } else {
-            System.out.println("Unknown user type: " + user.getUserType());
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        switch (user.getUserType() != null ? user.getUserType() : "") {
+            case "1" -> authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            case "2" -> authorities.add(new SimpleGrantedAuthority("ROLE_IT"));
+            default  -> authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
 
-        return new User(user.getEmail(), user.getPassword(), grantedAuthorities);
+        return new User(user.getEmail(), user.getPassword(), authorities);
     }
 }

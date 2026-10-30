@@ -14,15 +14,13 @@ public class SecurityController {
     public String showDefaultPageAfterLogin(HttpServletRequest request)
     {
         System.out.println(request);
-        if (request.isUserInRole("ROLE_ADMIN"))
-        {
+        if (request.isUserInRole("ROLE_ADMIN")) {
             return "redirect:/admin/dashboard/";
-        }
-        else if (request.isUserInRole("ROLE_USER"))
-        {
+        } else if (request.isUserInRole("ROLE_IT")) {
+            return "redirect:/it/dashboard/";
+        } else if (request.isUserInRole("ROLE_USER")) {
             return "redirect:/loader/";
         }
-
         return "redirect:/";
     }
 }

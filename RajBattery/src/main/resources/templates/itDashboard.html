@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+    <title>IT Portal — Registration Management</title>
+    <link rel="stylesheet" href="/user_assets/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap"/>
+    <style>
+        body { font-family: 'Nunito', sans-serif; background: #f0f2f8; }
+
+        .topbar {
+            background: linear-gradient(135deg, #0d1b4b, #3949ab);
+            color: #fff; padding: 1rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .topbar h4 { margin: 0; font-weight: 800; font-size: 1.1rem; }
+        .topbar small { opacity: .7; font-size: .75rem; }
+        .topbar a { color: rgba(255,255,255,.8); font-size: .8rem; text-decoration: none; }
+        .topbar a:hover { color: #fff; }
+
+        .page-wrap { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+
+        .stat-row { display: flex; gap: 1rem; margin-bottom: 1.75rem; flex-wrap: wrap; }
+        .stat-chip {
+            flex: 1; min-width: 160px; background: #fff; border-radius: 14px;
+            padding: 1.1rem 1.4rem; box-shadow: 0 1px 6px rgba(0,0,0,.06);
+            display: flex; align-items: center; gap: 1rem;
+        }
+        .chip-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .chip-icon.yellow { background: #fef9c3; }
+        .chip-icon.green  { background: #dcfce7; }
+        .chip-icon.blue   { background: #dbeafe; }
+        .chip-icon.orange { background: #ffedd5; }
+        .chip-val   { font-size: 1.6rem; font-weight: 800; color: #0d1b4b; line-height: 1; }
+        .chip-label { font-size: .72rem; color: #8a94a6; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+
+        .section-card { background: #fff; border-radius: 16px; padding: 1.5rem; box-shadow: 0 1px 6px rgba(0,0,0,.06); margin-bottom: 1.75rem; }
+        .section-title {
+            font-size: .8rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .08em; color: #0d1b4b; margin-bottom: 1.25rem;
+            display: flex; align-items: center; gap: .5rem;
+        }
+
+        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 700; letter-spacing: .04em; }
+        .badge-pending  { background: #fef9c3; color: #854d0e; }
+        .badge-approved { background: #dcfce7; color: #166534; }
+        .badge-rejected { background: #fee2e2; color: #991b1b; }
+
+        .erp-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .erp-table thead th {
+            background: #f0f2f8; color: #0d1b4b; font-size: .7rem;
+            font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+            padding: .7rem 1rem; border: none;
+        }
+        .erp-table thead th:first-child { border-radius: 10px 0 0 10px; }
+        .erp-table thead th:last-child  { border-radius: 0 10px 10px 0; }
+        .erp-table tbody td { padding: .65rem 1rem; font-size: .83rem; color: #374151; border-bottom: 1px solid #f0f2f8; vertical-align: middle; }
+        .erp-table tbody tr:last-child td { border-bottom: none; }
+        .erp-table tbody tr:hover td { background: #f8faff; }
+
+        .inline-form { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; }
+        .inline-form select {
+            border: 1.5px solid #e4e7ef; border-radius: 8px;
+            padding: .28rem .55rem; font-size: .76rem; color: #374151;
+            font-family: 'Nunito', sans-serif; max-width: 160px;
+        }
+        .btn-approve { background: #16a34a; color: #fff; border: none; border-radius: 8px; padding: .28rem .8rem; font-size: .76rem; font-weight: 700; cursor: pointer; }
+        .btn-approve:hover { opacity: .85; }
+        .btn-reject  { background: #dc2626; color: #fff; border: none; border-radius: 8px; padding: .28rem .8rem; font-size: .76rem; font-weight: 700; cursor: pointer; }
+        .btn-reject:hover  { opacity: .85; }
+        .btn-remap   { background: #3949ab; color: #fff; border: none; border-radius: 8px; padding: .28rem .8rem; font-size: .76rem; font-weight: 700; cursor: pointer; }
+        .btn-remap:hover   { opacity: .85; }
+
+        .empty-state { text-align: center; padding: 2.5rem 1rem; color: #8a94a6; font-size: .9rem; }
+        .empty-state svg { margin-bottom: .75rem; opacity: .4; display: block; margin-left: auto; margin-right: auto; }
+
+        .alert { border-radius: 10px; font-size: .85rem; padding: .75rem 1rem; margin-bottom: 1rem; }
+        .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+        .alert-danger  { background: #fff5f5; border: 1px solid #fecaca; color: #b91c1c; }
+    </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+    <div>
+        <h4>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="margin-right:6px;vertical-align:-3px;">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+            </svg>
+            IT Portal — Registration Management
+        </h4>
+        <small>Manage user access requests and company mapping</small>
+    </div>
+    <a href="/logout">Sign Out →</a>
+</div>
+
+<div class="page-wrap">
+
+    <div th:if="${msg}"  class="alert alert-success" th:text="${msg}"></div>
+    <div th:if="${emsg}" class="alert alert-danger"  th:text="${emsg}"></div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+        <div class="stat-chip">
+            <div class="chip-icon yellow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#d97706"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <div>
+                <div class="chip-val" th:text="${pendingCount}">0</div>
+                <div class="chip-label">Pending Users</div>
+            </div>
+        </div>
+        <div class="stat-chip">
+            <div class="chip-icon green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#16a34a"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
+            <div>
+                <div class="chip-val" th:text="${#lists.size(allList)}">0</div>
+                <div class="chip-label">Total Users</div>
+            </div>
+        </div>
+        <div class="stat-chip">
+            <div class="chip-icon blue">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#3949ab"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+            </div>
+            <div>
+                <div class="chip-val" th:text="${#lists.size(approvedOrgs)}">0</div>
+                <div class="chip-label">Active Companies</div>
+            </div>
+        </div>
+        <div class="stat-chip">
+            <div class="chip-icon orange">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#ea580c"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <div>
+                <div class="chip-val" th:text="${pendingOrgCount}">0</div>
+                <div class="chip-label">Pending Companies</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Pending User Approvals ── -->
+    <div class="section-card">
+        <div class="section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#0d1b4b"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            Pending User Approvals
+            <span class="status-badge badge-pending" th:text="${pendingCount} + ' pending'">0 pending</span>
+        </div>
+
+        <div th:if="${#lists.isEmpty(pendingList)}" class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            <div>No pending registrations — all caught up!</div>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(pendingList)}" class="table-responsive">
+            <table class="erp-table">
+                <thead>
+                    <tr>
+                        <th>#</th><th>Name</th><th>Email</th><th>Mobile</th><th>Requested On</th>
+                        <th>Role</th><th>Map Company</th><th>Approve</th><th>Reject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="reg, i : ${pendingList}">
+                        <td th:text="${i.count}">1</td>
+                        <td><strong th:text="${reg.username}">—</strong></td>
+                        <td th:text="${reg.email}">—</td>
+                        <td th:text="${reg.mobNo != null ? reg.mobNo : '—'}">—</td>
+                        <td th:text="${reg.registeredAt != null ? #temporals.format(reg.registeredAt,'dd-MM-yyyy HH:mm') : '—'}">—</td>
+                        <td>
+                            <form th:action="@{/it/approve/{id}/(id=${reg.id})}" method="post" class="inline-form">
+                                <select name="userType">
+                                    <option value="0">User</option>
+                                    <option value="1">Admin</option>
+                                </select>
+                                <select name="companyId">
+                                    <option value="">— No Company —</option>
+                                    <option th:each="o : ${approvedOrgs}" th:value="${o.id}" th:text="${o.orgName}">—</option>
+                                </select>
+                                <button type="submit" class="btn-approve">Approve</button>
+                            </form>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <form th:action="@{/it/reject/{id}/(id=${reg.id})}" method="post"
+                                  onsubmit="return confirm('Reject this registration?')">
+                                <button type="submit" class="btn-reject">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ── All Users (with edit mapping) ── -->
+    <div class="section-card">
+        <div class="section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#0d1b4b"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            All Users
+        </div>
+        <div class="table-responsive">
+            <table class="erp-table">
+                <thead>
+                    <tr>
+                        <th>#</th><th>Name</th><th>Email</th><th>Mobile</th>
+                        <th>Role</th><th>Company</th><th>Status</th><th>Approved By</th>
+                        <th>Date</th><th>Edit Mapping</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="reg, i : ${allList}">
+                        <td th:text="${i.count}">1</td>
+                        <td><strong th:text="${reg.username}">—</strong></td>
+                        <td th:text="${reg.email}">—</td>
+                        <td th:text="${reg.mobNo != null ? reg.mobNo : '—'}">—</td>
+                        <td>
+                            <span th:switch="${reg.userType}">
+                                <span th:case="'1'">Admin</span>
+                                <span th:case="'2'">IT</span>
+                                <span th:case="*">User</span>
+                            </span>
+                        </td>
+                        <td>
+                            <!-- Look up orgName from approvedOrgs by id -->
+                            <span th:if="${reg.companyId != null}">
+                                <span th:each="o : ${approvedOrgs}" th:if="${o.id == reg.companyId}" th:text="${o.orgName}">—</span>
+                            </span>
+                            <span th:if="${reg.companyId == null}" style="color:#8a94a6;">—</span>
+                        </td>
+                        <td>
+                            <span class="status-badge badge-pending"  th:if="${reg.status == 'PENDING'}"  th:text="${reg.status}"></span>
+                            <span class="status-badge badge-approved" th:if="${reg.status == 'APPROVED'}" th:text="${reg.status}"></span>
+                            <span class="status-badge badge-rejected" th:if="${reg.status == 'REJECTED'}" th:text="${reg.status}"></span>
+                        </td>
+                        <td th:text="${reg.approvedBy != null ? reg.approvedBy : '—'}">—</td>
+                        <td th:text="${reg.registeredAt != null ? #temporals.format(reg.registeredAt,'dd-MM-yyyy') : '—'}">—</td>
+                        <td>
+                            <form th:if="${reg.status != 'REJECTED'}"
+                                  th:action="@{/it/user/remap/{id}/(id=${reg.id})}" method="post" class="inline-form">
+                                <select name="userType">
+                                    <option value="0" th:selected="${reg.userType == '0' or reg.userType == null}">User</option>
+                                    <option value="1" th:selected="${reg.userType == '1'}">Admin</option>
+                                </select>
+                                <select name="companyId">
+                                    <option value="" th:selected="${reg.companyId == null}">— None —</option>
+                                    <option th:each="o : ${approvedOrgs}"
+                                            th:value="${o.id}"
+                                            th:text="${o.orgName}"
+                                            th:selected="${o.id == reg.companyId}">—</option>
+                                </select>
+                                <button type="submit" class="btn-remap">Save</button>
+                            </form>
+                            <span th:if="${reg.status == 'REJECTED'}" style="color:#8a94a6;font-size:.78rem;">—</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ── Pending Company Approvals ── -->
+    <div class="section-card">
+        <div class="section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#0d1b4b"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+            Pending Company Approvals
+            <span class="status-badge badge-pending" th:text="${pendingOrgCount} + ' pending'">0 pending</span>
+        </div>
+
+        <div th:if="${#lists.isEmpty(pendingOrgs)}" class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            <div>No pending company registrations.</div>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(pendingOrgs)}" class="table-responsive">
+            <table class="erp-table">
+                <thead>
+                    <tr><th>#</th><th>Company Name</th><th>Email</th><th>Phone</th><th>Industry</th><th>GST</th><th>City, State</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="org, i : ${pendingOrgs}">
+                        <td th:text="${i.count}">1</td>
+                        <td><strong th:text="${org.orgName}">—</strong></td>
+                        <td th:text="${org.orgEmail}">—</td>
+                        <td th:text="${org.orgPhone != null ? org.orgPhone : '—'}">—</td>
+                        <td th:text="${org.industry != null ? org.industry : '—'}">—</td>
+                        <td th:text="${org.gstNumber != null ? org.gstNumber : '—'}">—</td>
+                        <td th:text="${(org.orgCity != null ? org.orgCity : '') + (org.orgState != null ? ', ' + org.orgState : '')}">—</td>
+                        <td style="display:flex;gap:.4rem;">
+                            <form th:action="@{/it/company/approve/{id}/(id=${org.id})}" method="post">
+                                <button type="submit" class="btn-approve">Approve</button>
+                            </form>
+                            <form th:action="@{/it/company/reject/{id}/(id=${org.id})}" method="post"
+                                  onsubmit="return confirm('Reject this company?')">
+                                <button type="submit" class="btn-reject">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ── All Companies ── -->
+    <div class="section-card">
+        <div class="section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#0d1b4b"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+            All Company Registrations
+        </div>
+        <div class="table-responsive">
+            <table class="erp-table">
+                <thead>
+                    <tr><th>#</th><th>Company Name</th><th>Email</th><th>Phone</th><th>Industry</th><th>GST</th><th>City, State</th><th>Status</th><th>Approved By</th><th>Registered</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="org, i : ${allOrgs}">
+                        <td th:text="${i.count}">1</td>
+                        <td><strong th:text="${org.orgName}">—</strong></td>
+                        <td th:text="${org.orgEmail}">—</td>
+                        <td th:text="${org.orgPhone != null ? org.orgPhone : '—'}">—</td>
+                        <td th:text="${org.industry != null ? org.industry : '—'}">—</td>
+                        <td th:text="${org.gstNumber != null ? org.gstNumber : '—'}">—</td>
+                        <td th:text="${(org.orgCity != null ? org.orgCity : '') + (org.orgState != null ? ', ' + org.orgState : '')}">—</td>
+                        <td>
+                            <span class="status-badge badge-pending"  th:if="${org.status == 'PENDING'}"  th:text="${org.status}"></span>
+                            <span class="status-badge badge-approved" th:if="${org.status == 'APPROVED'}" th:text="${org.status}"></span>
+                            <span class="status-badge badge-rejected" th:if="${org.status == 'REJECTED'}" th:text="${org.status}"></span>
+                        </td>
+                        <td th:text="${org.approvedBy != null ? org.approvedBy : '—'}">—</td>
+                        <td th:text="${org.createdAt != null ? #temporals.format(org.createdAt,'dd-MM-yyyy') : '—'}">—</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="/user_assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

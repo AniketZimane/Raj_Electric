@@ -1,74 +1,177 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Sign up - Brand</title>
+    <title>ERP — Create Account</title>
     <link rel="stylesheet" href="/user_assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900">
-    <link rel="stylesheet" href="/user_assets/css/Card-Store.css">
-    <link rel="stylesheet" href="/user_assets/css/Company-Invoice.css">
-    <link rel="stylesheet" href="/user_assets/css/Ludens---Create-Edit-Form.css">
-    <link rel="stylesheet" href="/user_assets/css/Pretty-Login-Form-.css">
-    <link rel="stylesheet" href="/user_assets/css/select.css">
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="/assestad/js/clock.js"></script>
-</head>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Nunito', sans-serif; min-height: 100vh; display: flex; background: #f0f4f8; }
 
+        /* ── Left panel ── */
+        .panel-left {
+            flex: 1;
+            background: linear-gradient(145deg, #0d1b4b 0%, #1a2f7a 50%, #2a45a8 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 3rem 2.5rem; color: #fff; position: relative; overflow: hidden;
+        }
+        .panel-left::before {
+            content: ''; position: absolute; top: -100px; right: -100px;
+            width: 350px; height: 350px; border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+        .panel-left::after {
+            content: ''; position: absolute; bottom: -80px; left: -80px;
+            width: 280px; height: 280px; border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .panel-icon {
+            width: 72px; height: 72px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; margin-bottom: 1.75rem;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .panel-heading { font-size: 1.9rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+        .panel-sub {
+            font-size: 0.875rem; opacity: 0.65; text-align: center;
+            max-width: 260px; line-height: 1.7; margin-bottom: 2.5rem;
+        }
+        .steps-list { list-style: none; width: 100%; max-width: 280px; }
+        .steps-list li {
+            display: flex; align-items: center; gap: 0.85rem;
+            font-size: 0.85rem; opacity: 0.85; padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .steps-list li:last-child { border-bottom: none; }
+        .step-num {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* ── Right panel ── */
+        .panel-right {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 2.5rem; background: #fff;
+        }
+        .form-box { width: 100%; max-width: 420px; }
+
+        .erp-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #eef0fb; color: #3949ab;
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; padding: 5px 12px; border-radius: 20px;
+            margin-bottom: 1.25rem;
+        }
+        .erp-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #3949ab; }
+
+        .form-box h2 { font-size: 1.65rem; font-weight: 800; color: #0d1b4b; margin-bottom: 0.3rem; }
+        .form-box .hint { color: #8a94a6; font-size: 0.85rem; margin-bottom: 2rem; }
+
+        .form-floating .form-control {
+            border: 1.5px solid #e4e7ef; border-radius: 10px;
+            height: 54px; font-size: 0.9rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-floating .form-control:focus {
+            border-color: #3949ab; box-shadow: 0 0 0 3px rgba(57,73,171,0.1); outline: none;
+        }
+        .form-floating label { color: #8a94a6; font-size: 0.875rem; }
+
+        .btn-primary-erp {
+            width: 100%; padding: 0.8rem 1rem; border-radius: 10px;
+            font-weight: 700; font-size: 0.95rem;
+            background: linear-gradient(135deg, #0d1b4b, #3949ab);
+            border: none; color: #fff;
+            transition: opacity 0.2s, transform 0.15s;
+            margin-top: 0.25rem; letter-spacing: 0.3px;
+        }
+        .btn-primary-erp:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-primary-erp:active { transform: translateY(0); }
+
+        .bottom-link { text-align: center; margin-top: 1.75rem; font-size: 0.85rem; color: #8a94a6; }
+        .bottom-link a { color: #3949ab; font-weight: 700; text-decoration: none; }
+        .bottom-link a:hover { text-decoration: underline; }
+
+        .footer-note { text-align: center; margin-top: 2.5rem; font-size: 0.72rem; color: #c4c9d4; letter-spacing: 0.3px; }
+
+        @media (max-width: 768px) {
+            .panel-left { display: none; }
+            .panel-right { background: #f5f7ff; }
+        }
+    </style>
+</head>
 <body>
 <script th:inline="javascript">
-       var msg=[[${msg}]]
-       var emsg=[[${emsg}]]
-       if(msg!=null)
-       {
-               swal("Good job!", msg, "success");
-        }
-        if(emsg!=null)
-        {
-               swal("Opps!", emsg, "info");
-
-        }
+    var msg = [[${msg}]];
+    var emsg = [[${emsg}]];
+    if (msg != null) swal("Success!", msg, "success");
+    if (emsg != null) swal("Oops!", emsg, "warning");
 </script>
 
-    <section class="py-4 py-md-5 my-5">
-        <div class="container py-md-5">
-            <div class="row">
-                <div class="col-md-6 text-center"><img class="img-fluid w-100" src="/user_assets/img/illustrations/register.svg"></div>
-                <div class="col-md-5 col-xl-4 text-center text-md-start">
-                    <h2 class="display-6 fw-bold mb-5"><span class="underline pb-1"><strong>Sign up</strong></span></h2>
-                    <form method="post" action="/user/register/" object="${Registration}">
-                        <div class="mb-3"><input class="shadow-sm form-control" type="text" name="username" placeholder="Name"></div>
-                        <div class="mb-3"><input class="shadow-sm form-control" type="email" name="email" placeholder="Email">
-<!--                            <div class="d-lg-flex justify-content-lg-center" style="padding-top: 10px;">-->
-<!--                                <button class="btn btn-success" type="button" style="border-radius: 20px;">Send OTP</button></div>-->
-<!--                        </div>-->
-<!--                        <div class="mb-3"><input class="shadow-sm form-control" type="number" name="otp" placeholder="Enter Otp">-->
-<!--                            <div class="d-lg-flex justify-content-lg-center align-items-lg-center" style="padding-top: 10px;"><button class="btn btn-success" type="button" style="border-radius: 20px;">Verify</button></div>-->
-<!--                        </div>-->
+<div style="display:flex; width:100%; min-height:100vh;">
 
-                        <div class="mb-3"><input class="shadow-sm form-control" type="number" name="mobNo" placeholder="Mobile Number"></div>
-                        <div class="mb-3"><input class="shadow-sm form-control" type="password" name="password" placeholder="Password"></div>
-                        <div class="mb-3"><input class="shadow-sm form-control" type="password" name="password_repeat" placeholder="Repeat Password"></div>
-                        <div class="mb-5"><button class="btn btn-primary shadow" type="submit">Create account</button></div>
-                        <p class="text-muted">Have an account? <a href="/login">Log in&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-narrow-right">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <line x1="15" y1="16" x2="19" y2="12"></line>
-                                    <line x1="15" y1="8" x2="19" y2="12"></line>
-                                </svg></a>&nbsp;</p>
-                    </form>
+    <!-- Left brand panel — generic, no client name -->
+    <div class="panel-left">
+        <div class="panel-icon">⚡</div>
+        <div class="panel-heading">Get Started</div>
+        <p class="panel-sub">Create your account to request access to the ERP system.</p>
+        <ul class="steps-list">
+            <li><span class="step-num">1</span> Fill in your details</li>
+            <li><span class="step-num">2</span> Submit for admin approval</li>
+            <li><span class="step-num">3</span> Access your dashboard</li>
+        </ul>
+    </div>
+
+    <!-- Right form panel -->
+    <div class="panel-right">
+        <div class="form-box">
+            <div class="erp-chip">New Account</div>
+            <h2>Create Account</h2>
+            <p class="hint">Register to request access to the ERP system</p>
+
+            <form method="post" action="/user/register/">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Full Name" required autofocus>
+                    <label for="username">Full Name</label>
                 </div>
-            </div>
-        </div>
-    </section>
-    <footer></footer>
-    <script src="/user_assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/user_assets/js/bs-init.js"></script>
-    <script src="/user_assets/js/startup-modern.js"></script>
-</body>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                    <label for="email">Email Address</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="tel" class="form-control" id="mobNo" name="mobNo" placeholder="Mobile Number">
+                    <label for="mobNo">Mobile Number</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <label for="password">Password</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="password_repeat" name="password_repeat" placeholder="Confirm Password" required>
+                    <label for="password_repeat">Confirm Password</label>
+                </div>
+                <button type="submit" class="btn-primary-erp">Create Account →</button>
+            </form>
 
+            <div class="bottom-link">
+                Already have an account? <a href="/login">Sign in</a>
+            </div>
+            <div class="footer-note">Enterprise Resource Planning System</div>
+        </div>
+    </div>
+
+</div>
+
+<script src="/user_assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
 </html>
